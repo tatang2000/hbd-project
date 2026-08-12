@@ -10,17 +10,17 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', Courier, monospace; /* Kesan klasik/mesin tik */
+            font-family: 'Courier New', Courier, monospace; 
         }
         body {
             background-color: #ffffff;
             color: #000000;
-            overflow: hidden; /* Mencegah scroll */
+            overflow: hidden; 
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            perspective: 1500px; /* Kedalaman untuk animasi 3D buku */
+            perspective: 1500px; 
         }
 
         /* KANVAS KEMBANG API */
@@ -30,7 +30,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* Di belakang konten */
+            z-index: 1; 
             background-color: transparent;
         }
 
@@ -44,42 +44,47 @@
             transform-style: preserve-3d;
         }
 
-        /* HALAMAN BUKU */
+        /* PENGATURAN UMUM HALAMAN */
         .page {
             position: absolute;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            border: 2px solid #000;
-            border-radius: 10px;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             text-align: center;
             transform-origin: left center;
             transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
             backface-visibility: hidden;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
         }
 
-        /* KONTEN HALAMAN 1 */
+        /* HALAMAN 1 (TANPA PANEL / TRANSPARAN) */
         .page-1 {
             z-index: 2;
+            background-color: transparent; /* Tanpa background putih */
+            border: none; /* Tanpa garis hitam */
+            box-shadow: none; /* Tanpa bayangan */
+            justify-content: center;
         }
         .page-1 h1 {
             font-size: 2rem;
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 2px;
+            background: rgba(255, 255, 255, 0.7); /* Sedikit blur di teks agar tetap terbaca */
+            padding: 10px;
+            border-radius: 10px;
         }
 
-        /* IKON GARIS HITAM PUTIH (SVG) */
+        /* IKON */
         .icons {
             display: flex;
             gap: 20px;
             margin: 30px 0;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 15px;
         }
         .icons svg {
             width: 60px;
@@ -95,7 +100,7 @@
         .next-btn {
             margin-top: auto;
             padding: 10px 30px;
-            background: transparent;
+            background: #fff;
             color: #000;
             border: 2px solid #000;
             font-size: 1.2rem;
@@ -109,16 +114,36 @@
             color: #fff;
         }
 
-        /* KONTEN HALAMAN 2 */
+        /* HALAMAN 2 (DENGAN PANEL PUTIH & FITUR SCROLL) */
         .page-2 {
-            transform: rotateY(180deg); /* Awalnya terbalik tersembunyi */
+            transform: rotateY(180deg); 
             z-index: 1;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.95); /* Panel putih muncul di sini */
+            border: 2px solid #000;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            justify-content: flex-start; /* Memulai teks dari atas */
+            overflow-y: auto; /* MENGAKTIFKAN SCROLL JIKA TEKS PANJANG */
+            padding: 30px 20px;
         }
+
+        /* Kustomisasi Scrollbar Tema Monokrom */
+        .page-2::-webkit-scrollbar {
+            width: 6px;
+        }
+        .page-2::-webkit-scrollbar-thumb {
+            background: #000;
+            border-radius: 10px;
+        }
+        .page-2::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
         .page-2 p {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             line-height: 1.6;
             margin-bottom: 20px;
+            text-align: center;
         }
 
         /* CLASS UNTUK ANIMASI BALIK HALAMAN */
@@ -137,19 +162,17 @@
     <canvas id="fwCanvas"></canvas>
 
     <div class="book-container">
-        <!-- HALAMAN 1 -->
+        <!-- HALAMAN 1 (Tanpa Panel Background) -->
         <div class="page page-1" id="page1">
             <h1>Happy Birthday<br>Intan!</h1>
             
             <div class="icons">
-                <!-- SVG Kue Ulang Tahun -->
                 <svg viewBox="0 0 24 24">
                     <path d="M12 2v2M8 4v2M16 4v2"></path>
                     <path d="M4 11h16v4H4z"></path>
                     <path d="M4 15h16v7H4z"></path>
                     <path d="M4 11c0-1.5 2-2 4-2s3 1.5 4 1.5 2-1.5 4-1.5 4 .5 4 2"></path>
                 </svg>
-                <!-- SVG Hadiah -->
                 <svg viewBox="0 0 24 24">
                     <path d="M20 12v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-9"></path>
                     <path d="M4 12h16v-4H4z"></path>
@@ -162,15 +185,15 @@
             <button class="next-btn" onclick="turnPage()">Next</button>
         </div>
 
-        <!-- HALAMAN 2 -->
+        <!-- HALAMAN 2 (Dengan Panel, Bisa di-scroll) -->
         <div class="page page-2" id="page2">
             <p>
-                Hallo intan. Sebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe. <br> 
-                Aku tau hubungan kita sudah berakhir tapi aku tetep mau kasih link ini. <br>
-                aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy (udah tua). <br>
+                Hallo intan. Sebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe. <br><br> 
+                Aku tau hubungan kita sudah berakhir tapi aku tetep mau kasih link ini. <br><br>
+                aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy (udah tua). <br><br>
                 aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu, <br>
                 aku minta maaf juga jarang banget hubungin kamu, <br>
-                aku minta maaf ketika aku ngomong ada masalah di ingatan kamu. <br>
+                aku minta maaf ketika aku ngomong ada masalah di ingatan kamu. <br><br>
                 niatnya aku ngasih link pada jam 00:00 cuman kurang tau nih bisa atau engga. <br>
                 aku juga bingung mau kasih teks seperti apa yaudah kaliye itu aja dari aku. <br><br>
                 Semoga di umur yang baru ini kamu selalu diberikan kebahagiaan, kesehatan, dan semua yang kamu impikan bisa tercapai.<br><br>
@@ -180,13 +203,11 @@
     </div>
 
     <script>
-        // LOGIKA ANIMASI BUKU
         function turnPage() {
             document.getElementById('page1').classList.add('turn-page');
             document.getElementById('page2').classList.add('show-page-2');
         }
 
-        // LOGIKA KEMBANG API (Bawah ke Atas & Interaktif)
         const canvas = document.getElementById('fwCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -200,7 +221,7 @@
                 this.y = y;
                 this.color = color;
                 this.velocity = velocity;
-                this.isFirework = isFirework; // True = roket meluncur, False = ledakan
+                this.isFirework = isFirework; 
                 this.life = 100;
                 this.alpha = 1;
             }
@@ -221,8 +242,8 @@
                 this.y += this.velocity.y;
 
                 if (!this.isFirework) {
-                    this.velocity.y += 0.05; // Gravitasi ledakan
-                    this.velocity.x *= 0.98; // Gesekan udara
+                    this.velocity.y += 0.05; 
+                    this.velocity.x *= 0.98; 
                     this.velocity.y *= 0.98;
                     this.life -= 1.5;
                     this.alpha = this.life / 100;
@@ -243,50 +264,42 @@
             }
         }
 
-        // Luncurkan kembang api otomatis dari bawah
         function launchFirework() {
             const x = Math.random() * canvas.width;
             const y = canvas.height;
-            const targetY = Math.random() * (canvas.height / 2); // Meledak di area atas
             
             particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
-                x: (Math.random() - 0.5) * 2, // Gerak sedikit ke kiri/kanan
-                y: -(Math.random() * 3 + 5) // Kecepatan luncur ke atas
+                x: (Math.random() - 0.5) * 2, 
+                y: -(Math.random() * 3 + 5) 
             }, true));
         }
 
-        // Animasi Loop
         function animate() {
             requestAnimationFrame(animate);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; // Efek jejak cahaya tipis
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             for (let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
                 p.update();
 
-                // Cek roket meluncur mencapai puncak
                 if (p.isFirework && p.velocity.y >= -1) {
                     createExplosion(p.x, p.y);
                     particles.splice(i, 1);
                 } 
-                // Cek partikel ledakan mati
                 else if (!p.isFirework && p.life <= 0) {
                     particles.splice(i, 1);
                 }
             }
         }
 
-        // Auto launch tiap 800ms
         setInterval(launchFirework, 800);
         animate();
 
-        // INTERAKSI: Meledak ketika layar di tap/klik
         window.addEventListener('pointerdown', (e) => {
             createExplosion(e.clientX, e.clientY);
         });
 
-        // Resize responsif
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
