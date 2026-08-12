@@ -62,9 +62,9 @@
         /* HALAMAN 1 (TANPA PANEL / TRANSPARAN) */
         .page-1 {
             z-index: 2;
-            background-color: transparent; /* Tanpa background putih */
-            border: none; /* Tanpa garis hitam */
-            box-shadow: none; /* Tanpa bayangan */
+            background-color: transparent; 
+            border: none; 
+            box-shadow: none; 
             justify-content: center;
         }
         .page-1 h1 {
@@ -72,7 +72,7 @@
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            background: rgba(255, 255, 255, 0.7); /* Sedikit blur di teks agar tetap terbaca */
+            background: rgba(255, 255, 255, 0.7); 
             padding: 10px;
             border-radius: 10px;
         }
@@ -118,12 +118,12 @@
         .page-2 {
             transform: rotateY(180deg); 
             z-index: 1;
-            background-color: rgba(255, 255, 255, 0.95); /* Panel putih muncul di sini */
+            background-color: rgba(255, 255, 255, 0.95); 
             border: 2px solid #000;
             border-radius: 10px;
             box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
-            justify-content: flex-start; /* Memulai teks dari atas */
-            overflow-y: auto; /* MENGAKTIFKAN SCROLL JIKA TEKS PANJANG */
+            justify-content: flex-start; 
+            overflow-y: auto; 
             padding: 30px 20px;
         }
 
@@ -162,7 +162,7 @@
     <canvas id="fwCanvas"></canvas>
 
     <div class="book-container">
-        <!-- HALAMAN 1 (Tanpa Panel Background) -->
+        <!-- HALAMAN 1 -->
         <div class="page page-1" id="page1">
             <h1>Happy Birthday<br>Intan!</h1>
             
@@ -185,7 +185,7 @@
             <button class="next-btn" onclick="turnPage()">Next</button>
         </div>
 
-        <!-- HALAMAN 2 (Dengan Panel, Bisa di-scroll) -->
+        <!-- HALAMAN 2 -->
         <div class="page page-2" id="page2">
             <p>
                 Hallo intan. Sebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe. <br><br> 
@@ -241,7 +241,10 @@
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
 
-                if (!this.isFirework) {
+                if (this.isFirework) {
+                    // PERBAIKAN: Menambahkan gravitasi pada roket agar melambat dan bisa meledak
+                    this.velocity.y += 0.05; 
+                } else {
                     this.velocity.y += 0.05; 
                     this.velocity.x *= 0.98; 
                     this.velocity.y *= 0.98;
@@ -270,7 +273,8 @@
             
             particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
                 x: (Math.random() - 0.5) * 2, 
-                y: -(Math.random() * 3 + 5) 
+                // Kecepatan luncur acak supaya tingginya beda-beda
+                y: -(Math.random() * 4 + 6) 
             }, true));
         }
 
@@ -283,7 +287,8 @@
                 let p = particles[i];
                 p.update();
 
-                if (p.isFirework && p.velocity.y >= -1) {
+                // Roket meledak saat kecepatannya ke atas habis (mencapai titik tertinggi)
+                if (p.isFirework && p.velocity.y >= 0) {
                     createExplosion(p.x, p.y);
                     particles.splice(i, 1);
                 } 
@@ -293,9 +298,11 @@
             }
         }
 
-        setInterval(launchFirework, 800);
+        // PERBAIKAN: Waktu muncul kembang api dibuat lebih jarang (1500 ms = 1.5 detik)
+        setInterval(launchFirework, 1500);
         animate();
 
+        // Manual sentuh layar tetap bisa kalau dia mau interaksi
         window.addEventListener('pointerdown', (e) => {
             createExplosion(e.clientX, e.clientY);
         });
