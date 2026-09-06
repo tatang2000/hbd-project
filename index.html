@@ -20,7 +20,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            perspective: 1500px; 
+            perspective: 1500px; /* Kedalaman 3D untuk efek buku */
         }
 
         /* KANVAS KEMBANG API */
@@ -41,27 +41,44 @@
             max-width: 400px;
             height: 80vh;
             z-index: 10;
-            transform-style: preserve-3d;
+            transform-style: preserve-3d; /* Menjaga efek 3D anak-anaknya */
         }
 
-        /* PENGATURAN UMUM HALAMAN */
+        /* PENGATURAN UMUM HALAMAN BUKU */
         .page {
             position: absolute;
             width: 100%;
             height: 100%;
+            top: 0;
+            left: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
+            /* Titik tumpu putaran di ujung kiri layar */
             transform-origin: left center;
+            /* Efek transisi membuka lembaran */
             transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-            backface-visibility: hidden;
+            /* Menyembunyikan halaman saat terbalik */
+            backface-visibility: hidden; 
         }
 
-        /* HALAMAN 1 (TANPA PANEL / TRANSPARAN) */
+        /* CLASS SAAT HALAMAN DIBALIK */
+        .page.turned {
+            transform: rotateY(-180deg);
+            pointer-events: none; /* Tidak bisa diklik lagi setelah dibalik */
+        }
+
+        /* URUTAN TUMPUKAN HALAMAN (Z-INDEX) */
+        #page1 { z-index: 5; }
+        #page2 { z-index: 4; }
+        #page3 { z-index: 3; }
+        #page4 { z-index: 2; }
+        #page5 { z-index: 1; }
+
+        /* HALAMAN 1 (AWAL - TRANSPARAN) */
         .page-1 {
-            z-index: 2;
             background-color: transparent; 
             border: none; 
             box-shadow: none; 
@@ -77,7 +94,7 @@
             border-radius: 10px;
         }
 
-        /* IKON */
+        /* IKON HALAMAN 1 */
         .icons {
             display: flex;
             gap: 20px;
@@ -96,9 +113,42 @@
             stroke-linejoin: round;
         }
 
+        /* HALAMAN 2-5 (PANEL PUTIH DENGAN SCROLL) */
+        .page-panel {
+            background-color: rgba(255, 255, 255, 0.95); 
+            border: 2px solid #000;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            justify-content: flex-start; 
+            overflow-y: auto; 
+            padding: 30px 20px;
+            /* Disembunyikan awalnya agar tidak tembus Halaman 1 */
+            opacity: 0; 
+            pointer-events: none;
+        }
+        
+        /* CLASS UNTUK MEMUNCULKAN HALAMAN DI BAWAHNYA SAAT DIBALIK */
+        .page-panel.ready {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* SCROLLBAR MONOKROM */
+        .page-panel::-webkit-scrollbar { width: 6px; }
+        .page-panel::-webkit-scrollbar-thumb { background: #000; border-radius: 10px; }
+        .page-panel::-webkit-scrollbar-track { background: transparent; }
+        
+        .page-panel p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
         /* TOMBOL NEXT */
         .next-btn {
-            margin-top: auto;
+            margin-top: 20px; 
+            margin-bottom: 10px;
             padding: 10px 30px;
             background: #fff;
             color: #000;
@@ -108,71 +158,33 @@
             cursor: pointer;
             transition: all 0.3s;
             text-transform: uppercase;
+            align-self: center; 
+            flex-shrink: 0; 
         }
         .next-btn:hover, .next-btn:active {
             background: #000;
             color: #fff;
         }
-
-        /* HALAMAN 2 (DENGAN PANEL PUTIH & FITUR SCROLL) */
-        .page-2 {
-            transform: rotateY(180deg); 
-            z-index: 1;
-            background-color: rgba(255, 255, 255, 0.95); 
-            border: 2px solid #000;
-            border-radius: 10px;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
-            justify-content: flex-start; 
-            overflow-y: auto; 
-            padding: 30px 20px;
-        }
-
-        /* Kustomisasi Scrollbar Tema Monokrom */
-        .page-2::-webkit-scrollbar {
-            width: 6px;
-        }
-        .page-2::-webkit-scrollbar-thumb {
-            background: #000;
-            border-radius: 10px;
-        }
-        .page-2::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .page-2 p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        /* CLASS UNTUK ANIMASI BALIK HALAMAN */
-        .turn-page {
-            transform: rotateY(-180deg);
-        }
-        .show-page-2 {
-            transform: rotateY(0deg);
-            z-index: 3;
-        }
     </style>
 </head>
 <body>
 
-    <!-- Canvas untuk kembang api -->
     <canvas id="fwCanvas"></canvas>
 
     <div class="book-container">
+        
         <!-- HALAMAN 1 -->
         <div class="page page-1" id="page1">
             <h1>Happy Birthday<br>Intan!</h1>
-            
             <div class="icons">
+                <!-- SVG Kue Ulang Tahun -->
                 <svg viewBox="0 0 24 24">
                     <path d="M12 2v2M8 4v2M16 4v2"></path>
                     <path d="M4 11h16v4H4z"></path>
                     <path d="M4 15h16v7H4z"></path>
                     <path d="M4 11c0-1.5 2-2 4-2s3 1.5 4 1.5 2-1.5 4-1.5 4 .5 4 2"></path>
                 </svg>
+                <!-- SVG Kado -->
                 <svg viewBox="0 0 24 24">
                     <path d="M20 12v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-9"></path>
                     <path d="M4 12h16v-4H4z"></path>
@@ -181,39 +193,75 @@
                     <path d="M12 8h4a2 2 0 0 0 0-4c-2 0-4 4-4 4z"></path>
                 </svg>
             </div>
-
-            <button class="next-btn" onclick="turnPage()">Next</button>
+            <button class="next-btn" onclick="turnNextPage()">Next</button>
         </div>
 
         <!-- HALAMAN 2 -->
-        <div class="page page-2" id="page2">
+        <div class="page page-panel" id="page2">
             <p>
-                Hallo intan. Sebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe. <br><br> 
+                Hallo intan.<br><br>
+                Sebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe. <br><br> 
                 Aku tau hubungan kita sudah berakhir tapi aku tetep mau kasih link ini. <br><br>
-                aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy (udah tua). <br><br>
-                aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu, <br>
-                aku minta maaf juga jarang banget hubungin kamu, <br>
-                aku minta maaf ketika aku ngomong ada masalah di ingatan kamu. <br><br>
-                niatnya aku ngasih link pada jam 00:00 cuman kurang tau nih bisa atau engga. <br>
-                aku juga bingung mau kasih teks seperti apa yaudah kaliye itu aja dari aku. <br><br>
-                Semoga di umur yang baru ini kamu selalu diberikan kebahagiaan, kesehatan, dan semua yang kamu impikan bisa tercapai.<br><br>
-                I love you so much intan septiani basyiroh... i'll be waiting for you❤️
+                aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy (udah tua).
+            </p>
+            <button class="next-btn" onclick="turnNextPage()">Next</button>
+        </div>
+
+        <!-- HALAMAN 3 -->
+        <div class="page page-panel" id="page3">
+            <p>
+                aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu, <br><br>
+                aku minta maaf juga jarang banget hubungin kamu, <br><br>
+                aku minta maaf ketika aku ngomong ada masalah di ingatan kamu.
+            </p>
+            <button class="next-btn" onclick="turnNextPage()">Next</button>
+        </div>
+
+        <!-- HALAMAN 4 -->
+        <div class="page page-panel" id="page4">
+            <p>
+                niatnya aku ngasih link pada jam 00:00 cuman kurang tau nih bisa atau engga. <br><br>
+                aku juga bingung mau kasih teks seperti apa yaudah kaliye itu aja dari aku.
+            </p>
+            <button class="next-btn" onclick="turnNextPage()">Next</button>
+        </div>
+
+        <!-- HALAMAN 5 -->
+        <div class="page page-panel" id="page5">
+            <p>
+                Semoga di umur yang baru ini kamu selalu diberikan kebahagiaan, kesehatan, dan semua yang kamu impikan bisa tercapai.<br><br><br>
+                I love you so much intan septiani basyiroh... <br><br>
+                i'll be waiting for you❤️
             </p>
         </div>
+
     </div>
 
     <script>
-        function turnPage() {
-            document.getElementById('page1').classList.add('turn-page');
-            document.getElementById('page2').classList.add('show-page-2');
+        // LOGIKA MEMBALIK HALAMAN (3D FLIP)
+        let currentPage = 1;
+        const totalPages = 5;
+
+        function turnNextPage() {
+            if (currentPage < totalPages) {
+                // Munculkan halaman berikutnya tepat di bawahnya sebelum membalik
+                document.getElementById('page' + (currentPage + 1)).classList.add('ready');
+                
+                // Balik halaman saat ini ke kiri
+                document.getElementById('page' + currentPage).classList.add('turned');
+                
+                currentPage++;
+            }
         }
 
+        // LOGIKA KEMBANG API & KANVAS
         const canvas = document.getElementById('fwCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         let particles = [];
+        const gravity = 0.05;
 
         class Particle {
             constructor(x, y, color, velocity, isFirework) {
@@ -242,10 +290,9 @@
                 this.y += this.velocity.y;
 
                 if (this.isFirework) {
-                    // PERBAIKAN: Menambahkan gravitasi pada roket agar melambat dan bisa meledak
-                    this.velocity.y += 0.05; 
+                    this.velocity.y += gravity; 
                 } else {
-                    this.velocity.y += 0.05; 
+                    this.velocity.y += gravity; 
                     this.velocity.x *= 0.98; 
                     this.velocity.y *= 0.98;
                     this.life -= 1.5;
@@ -267,17 +314,17 @@
             }
         }
 
-        function launchFirework() {
+        // KEMBANG API OTOMATIS (ACAK)
+        function launchRandomFirework() {
             const x = Math.random() * canvas.width;
             const y = canvas.height;
-            
             particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
                 x: (Math.random() - 0.5) * 2, 
-                // Kecepatan luncur acak supaya tingginya beda-beda
                 y: -(Math.random() * 4 + 6) 
             }, true));
         }
 
+        // ANIMASI LOOP UTAMA
         function animate() {
             requestAnimationFrame(animate);
             ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; 
@@ -287,7 +334,6 @@
                 let p = particles[i];
                 p.update();
 
-                // Roket meledak saat kecepatannya ke atas habis (mencapai titik tertinggi)
                 if (p.isFirework && p.velocity.y >= 0) {
                     createExplosion(p.x, p.y);
                     particles.splice(i, 1);
@@ -298,13 +344,30 @@
             }
         }
 
-        // PERBAIKAN: Waktu muncul kembang api dibuat lebih jarang (1500 ms = 1.5 detik)
-        setInterval(launchFirework, 1500);
+        setInterval(launchRandomFirework, 1500);
         animate();
 
-        // Manual sentuh layar tetap bisa kalau dia mau interaksi
+        // LOGIKA KEMBANG API MENGARAH KE TITIK KLIK/SENTUH
         window.addEventListener('pointerdown', (e) => {
-            createExplosion(e.clientX, e.clientY);
+            const targetX = e.clientX;
+            const targetY = e.clientY;
+            
+            // Luncurkan dari titik acak di bagian bawah layar
+            const startX = Math.random() * canvas.width;
+            const startY = canvas.height;
+            
+            // Rumus fisika agar petasan mendarat dan meledak pas di titik klik
+            const distanceY = startY - targetY;
+            const safeDistanceY = Math.max(distanceY, 10); 
+            
+            const vy = -Math.sqrt(2 * gravity * safeDistanceY); // Kecepatan vertikal
+            const t = Math.abs(vy / gravity); // Waktu tempuh
+            const vx = (targetX - startX) / t; // Kecepatan horizontal
+            
+            particles.push(new Particle(startX, startY, colors[Math.floor(Math.random() * colors.length)], {
+                x: vx,
+                y: vy
+            }, true));
         });
 
         window.addEventListener('resize', () => {
