@@ -114,10 +114,27 @@
             flex-direction: column;
             align-items: center;
             animation: fadeIn 1s forwards;
+            position: relative;
         }
+        
+        /* TANDA PANAH (BARU) */
+        .click-indicator {
+            position: absolute;
+            top: -75px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffaa00;
+            font-size: 2.5rem;
+            animation: bounceArrow 1s infinite;
+            pointer-events: none;
+            z-index: 5;
+            text-shadow: 0 0 15px #ff0043;
+        }
+
         .cake-wrapper {
             position: relative;
         }
+        
         .cake-flame {
             position: absolute;
             top: -30px;
@@ -128,14 +145,16 @@
             background: #ffaa00;
             border-radius: 50% 50% 20% 20%;
             box-shadow: 0 0 15px #ffaa00, 0 0 30px #ff0043;
-            cursor: pointer; /* Memberitahu bahwa ini bisa diklik */
+            cursor: pointer; 
             animation: flicker 0.1s infinite alternate;
             z-index: 3;
             transition: 0.3s;
         }
+        
         .cake-flame:hover {
             transform: translateX(-50%) scale(1.2);
         }
+        
         .cake-smoke {
             position: absolute;
             top: -30px;
@@ -148,9 +167,11 @@
             opacity: 0;
             z-index: 2;
         }
+        
         .cake-smoke.puff {
             animation: blowOutSmoke 1.5s forwards;
         }
+        
         .cake-candle {
             width: 12px;
             height: 35px;
@@ -160,6 +181,7 @@
             position: relative;
             z-index: 1;
         }
+        
         .cake-body {
             width: 120px;
             height: 50px;
@@ -170,14 +192,21 @@
             position: relative;
             z-index: 1;
         }
+        
         .tiup-text {
-            margin-top: 15px;
-            font-size: 1rem;
-            color: #aaa;
+            margin-top: 25px;
+            font-size: 1.1rem;
+            color: #ffaa00;
+            font-weight: bold;
             animation: pulse 1.5s infinite;
+            letter-spacing: 1px;
         }
 
-        /* ANIMASI KUE */
+        /* ANIMASI */
+        @keyframes bounceArrow {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, -15px); }
+        }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -191,7 +220,7 @@
             100% { transform: translate(-50%, -60px) scale(3); opacity: 0; }
         }
         @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
+            0%, 100% { opacity: 0.5; }
             50% { opacity: 1; }
         }
     </style>
@@ -305,40 +334,36 @@
         let typingTimer;
         let finaleTriggered = false;
 
-        // FUNGSI MEMUNCULKAN KUE
         function showCake() {
             if(document.getElementById('cakeUI')) return; 
             
             const cakeHTML = `
                 <div class="cake-container" id="cakeUI">
+                    <div class="click-indicator" id="clickArrow">⬇</div>
                     <div class="cake-wrapper">
                         <div class="cake-flame" id="flame" onclick="blowCandle()"></div>
                         <div class="cake-smoke" id="smoke"></div>
                         <div class="cake-candle"></div>
                         <div class="cake-body"></div>
                     </div>
-                    <p class="tiup-text" id="tiupText">(Klik apinya untuk meniup lilin)</p>
+                    <p class="tiup-text" id="tiupText">KLIK APINYA UNTUK TIUP LILIN!</p>
                 </div>
             `;
             document.getElementById("textBox").innerHTML += cakeHTML;
         }
 
-        // FUNGSI SAAT LILIN DITIUP (DIKLIK)
         function blowCandle() {
             if(finaleTriggered) return;
-            finaleTriggered = true; // Tandai agar kembang api finale meledak
+            finaleTriggered = true; 
             
-            // Matikan api dan munculkan asap
+            document.getElementById('clickArrow').style.display = 'none'; // Sembunyikan panah
             document.getElementById('flame').style.display = 'none';
             document.getElementById('smoke').classList.add('puff');
             
-            // Ubah teks
             document.getElementById('tiupText').innerHTML = "Yeayyy! Happy Birthday! 🎉";
             document.getElementById('tiupText').style.animation = 'none';
-            document.getElementById('tiupText').style.opacity = '1';
             document.getElementById('tiupText').style.color = '#fff';
             
-            // Tunggu 0.8 detik (biar asapnya naik dulu), baru luncurkan kembang api finale!
             setTimeout(() => {
                 launchFinale();
             }, 800);
@@ -365,8 +390,6 @@
                 typingTimer = setTimeout(typeWriter, speed);
             } else {
                 isTyping = false;
-                
-                // Jika ketikan selesai dan ini halaman terakhir, munculkan kue!
                 if (currentPage === pages.length - 1 && !finaleTriggered) {
                     showCake();
                 }
@@ -379,7 +402,6 @@
                 document.getElementById("textBox").innerHTML = pages[currentPage].replace(/\n/g, '<br>');
                 isTyping = false;
                 
-                // Jika di-skip saat mengetik halaman terakhir, langsung munculkan kue
                 if (currentPage === pages.length - 1 && !finaleTriggered) {
                     showCake();
                 }
@@ -407,7 +429,7 @@
             }
         }
 
-        // --- LOGIKA KEMBANG API & GRAND FINALE ---
+        // --- OPTIMASI KEMBANG API (Anti-Lag / Kecepatan Stabil) ---
         const canvas = document.getElementById('fwCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -452,7 +474,7 @@
                     this.velocity.y += gravity; 
                     this.velocity.x *= 0.96; 
                     this.velocity.y *= 0.96;
-                    this.life -= 1.2;
+                    this.life -= 1.5; // Sedikit lebih cepat memudar agar ringan di prosesor
                     this.alpha = this.life / 100;
                 }
             }
@@ -460,7 +482,8 @@
 
         function createExplosion(x, y) {
             playExplosionSound(); 
-            for (let i = 0; i < 60; i++) { 
+            // Jumlah percikan dikurangi sedikit ke 40 agar frame rate tetap stabil (tidak lag/cepat-lambat)
+            for (let i = 0; i < 40; i++) { 
                 const angle = Math.random() * Math.PI * 2;
                 const speed = Math.random() * 5 + 1;
                 particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
@@ -471,6 +494,9 @@
         }
 
         function launchRandomFirework() {
+            // ANTI LAG: Jangan luncurkan petasan otomatis jika tab tidak sedang dilihat/aktif
+            if(document.hidden) return; 
+
             if(document.getElementById('startScreen').style.display === 'none') {
                 const x = Math.random() * canvas.width;
                 const y = canvas.height;
@@ -484,9 +510,10 @@
         function launchFinale() {
             let count = 0;
             const finaleInterval = setInterval(() => {
+                if(document.hidden) return; // Anti lag saat tab disembunyikan
                 launchRandomFirework();
                 count++;
-                if (count > 25) clearInterval(finaleInterval); // Dibuat lebih banyak (25 tembakan)
+                if (count > 25) clearInterval(finaleInterval); 
             }, 150);
         }
 
@@ -497,6 +524,11 @@
             ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.globalCompositeOperation = 'lighter';
+
+            // ANTI LAG: Batasi maksimal jumlah partikel di kanvas
+            if (particles.length > 500) {
+                particles.splice(0, particles.length - 500);
+            }
 
             for (let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
@@ -516,7 +548,6 @@
         animate();
 
         window.addEventListener('pointerdown', (e) => {
-            // Jangan luncurkan kembang api kalau ngeklik tombol, text box, atau API LILIN
             if(e.target.tagName === 'BUTTON' || e.target.closest('.text-box') || e.target.id === 'flame') return; 
 
             const targetX = e.clientX;
