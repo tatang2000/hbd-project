@@ -107,7 +107,7 @@
 
         #player { display: none; }
 
-        /* --- CSS KUE & LILIN --- */
+        /* --- CSS KUE BLUEBERRY --- */
         .cake-container {
             margin-top: 40px;
             display: flex;
@@ -117,7 +117,6 @@
             position: relative;
         }
         
-        /* TANDA PANAH (BARU) */
         .click-indicator {
             position: absolute;
             top: -75px; 
@@ -133,6 +132,10 @@
 
         .cake-wrapper {
             position: relative;
+            width: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .cake-flame {
@@ -147,7 +150,7 @@
             box-shadow: 0 0 15px #ffaa00, 0 0 30px #ff0043;
             cursor: pointer; 
             animation: flicker 0.1s infinite alternate;
-            z-index: 3;
+            z-index: 6;
             transition: 0.3s;
         }
         
@@ -165,32 +168,65 @@
             background: #ccc;
             border-radius: 50%;
             opacity: 0;
-            z-index: 2;
+            z-index: 5;
         }
         
         .cake-smoke.puff {
             animation: blowOutSmoke 1.5s forwards;
         }
         
+        /* Lilin ulang tahun belang-belang merah putih */
         .cake-candle {
             width: 12px;
-            height: 35px;
-            background: #fff;
+            height: 40px;
+            background: repeating-linear-gradient(
+                45deg,
+                #fff,
+                #fff 4px,
+                #ff4d4d 4px,
+                #ff4d4d 8px
+            );
             margin: 0 auto;
             border-radius: 3px;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
+
+        /* Krim/Frosting Blueberry */
+        .cake-frosting {
+            position: absolute;
+            width: 140px;
+            height: 35px;
+            background: #9d7bd6; /* Light blueberry purple */
+            border-radius: 20px;
+            top: 30px; 
+            z-index: 3;
+            box-shadow: 0 5px 5px rgba(0,0,0,0.3);
+        }
+
+        /* Buah Blueberry di atas kue */
+        .berry {
+            position: absolute;
+            width: 16px; height: 16px;
+            background: radial-gradient(circle at 30% 30%, #6c88d9, #1c274a);
+            border-radius: 50%;
+            z-index: 4;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+        }
+        .berry1 { left: 20px; top: 25px; }
+        .berry2 { left: 65px; top: 20px; }
+        .berry3 { right: 20px; top: 28px; }
         
+        /* Badan Kue Blueberry (Base Ungu Gelap) */
         .cake-body {
-            width: 120px;
-            height: 50px;
-            background: #fff;
-            border-radius: 8px;
-            border-bottom: 6px solid #aaa;
-            margin-top: -5px;
+            width: 124px;
+            height: 60px;
+            background: linear-gradient(to right, #2b1747, #452473, #2b1747);
+            border-radius: 5px 5px 8px 8px;
             position: relative;
             z-index: 1;
+            margin-top: -15px; /* Tertutup frosting */
+            box-shadow: inset 0 -10px 15px rgba(0,0,0,0.6);
         }
         
         .tiup-text {
@@ -263,7 +299,7 @@
             if (!audioCtx) return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
             
-            const bufferSize = audioCtx.sampleRate * 0.8; 
+            const bufferSize = audioCtx.sampleRate * 0.5; // Dipersingkat agar lebih enteng
             const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const data = buffer.getChannelData(0);
             
@@ -276,12 +312,12 @@
             
             const filter = audioCtx.createBiquadFilter();
             filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
-            filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.5);
+            filter.frequency.setValueAtTime(800, audioCtx.currentTime);
+            filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
             
             const gainNode = audioCtx.createGain();
-            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime); 
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+            gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime); 
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
             
             noise.connect(filter);
             filter.connect(gainNode);
@@ -322,8 +358,6 @@
             "Hallo Intan...\n\nSebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe.",
             "Aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy🎉🎉.",
             "Aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu.",
-            "Aku ada puisi yang bagusss banget",
-            "come to me like a spring day holding\ncherry blossoms, and give me a\nmidsummer tropical night.\n\nbefore the fox rain of autumn wets the\nmaple leaves, make me forget how to\nface this wistful scenery alone.\n\nplease become my weakness.\nso the coming winter won't be cold,\ni offer you my heart.",
             "Semoga di umur yang baru ini kamu selalu diberikan kebahagiaan, kesehatan, dan semua yang kamu impikan bisa tercapai.",
             "I love you so much intan septiani basyiroh...\n\n\nganbatte neeee anataaaaa❤️"
         ];
@@ -344,6 +378,10 @@
                         <div class="cake-flame" id="flame" onclick="blowCandle()"></div>
                         <div class="cake-smoke" id="smoke"></div>
                         <div class="cake-candle"></div>
+                        <div class="cake-frosting"></div>
+                        <div class="berry berry1"></div>
+                        <div class="berry berry2"></div>
+                        <div class="berry berry3"></div>
                         <div class="cake-body"></div>
                     </div>
                     <p class="tiup-text" id="tiupText">KLIK APINYA UNTUK TIUP LILIN!</p>
@@ -356,7 +394,7 @@
             if(finaleTriggered) return;
             finaleTriggered = true; 
             
-            document.getElementById('clickArrow').style.display = 'none'; // Sembunyikan panah
+            document.getElementById('clickArrow').style.display = 'none'; 
             document.getElementById('flame').style.display = 'none';
             document.getElementById('smoke').classList.add('puff');
             
@@ -429,7 +467,7 @@
             }
         }
 
-        // --- OPTIMASI KEMBANG API (Anti-Lag / Kecepatan Stabil) ---
+        // --- OPTIMASI KEMBANG API (Bebas Lag & FPS Stabil 60) ---
         const canvas = document.getElementById('fwCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -451,16 +489,13 @@
             }
 
             draw() {
-                ctx.save();
+                // MENGHAPUS shadowBlur KARENA ITU PENYEBAB UTAMA LAG. 
+                // Kita gunakan globalCompositeOperation (Additive blending) murni.
                 ctx.globalAlpha = this.alpha;
-                ctx.shadowBlur = this.isFirework ? 15 : 25; 
-                ctx.shadowColor = this.color;
-                
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.isFirework ? 3 : 2.5, 0, Math.PI * 2);
                 ctx.fillStyle = this.color;
                 ctx.fill();
-                ctx.restore();
             }
 
             update() {
@@ -472,9 +507,9 @@
                     this.velocity.y += gravity; 
                 } else {
                     this.velocity.y += gravity; 
-                    this.velocity.x *= 0.96; 
-                    this.velocity.y *= 0.96;
-                    this.life -= 1.5; // Sedikit lebih cepat memudar agar ringan di prosesor
+                    this.velocity.x *= 0.95; 
+                    this.velocity.y *= 0.95;
+                    this.life -= 1.8; // Memudar lebih cepat agar RAM tidak penuh
                     this.alpha = this.life / 100;
                 }
             }
@@ -482,8 +517,8 @@
 
         function createExplosion(x, y) {
             playExplosionSound(); 
-            // Jumlah percikan dikurangi sedikit ke 40 agar frame rate tetap stabil (tidak lag/cepat-lambat)
-            for (let i = 0; i < 40; i++) { 
+            // Partikel dikurangi menjadi 30 per ledakan. Dengan Composite Lighter, ini sudah sangat terang.
+            for (let i = 0; i < 30; i++) { 
                 const angle = Math.random() * Math.PI * 2;
                 const speed = Math.random() * 5 + 1;
                 particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
@@ -494,7 +529,6 @@
         }
 
         function launchRandomFirework() {
-            // ANTI LAG: Jangan luncurkan petasan otomatis jika tab tidak sedang dilihat/aktif
             if(document.hidden) return; 
 
             if(document.getElementById('startScreen').style.display === 'none') {
@@ -510,24 +544,27 @@
         function launchFinale() {
             let count = 0;
             const finaleInterval = setInterval(() => {
-                if(document.hidden) return; // Anti lag saat tab disembunyikan
+                if(document.hidden) return; 
                 launchRandomFirework();
                 count++;
-                if (count > 25) clearInterval(finaleInterval); 
-            }, 150);
+                if (count > 20) clearInterval(finaleInterval); 
+            }, 200);
         }
 
         function animate() {
             requestAnimationFrame(animate);
+            
+            // Mode normal untuk background (menggambar efek jejak/trail gelap)
             ctx.globalCompositeOperation = 'source-over';
-            ctx.shadowBlur = 0;
             ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Mode Lighter (Additive) agar partikel yang menumpuk otomatis bersinar putih terang
             ctx.globalCompositeOperation = 'lighter';
 
-            // ANTI LAG: Batasi maksimal jumlah partikel di kanvas
-            if (particles.length > 500) {
-                particles.splice(0, particles.length - 500);
+            // LIMIT PARTIKEL EKSTREM ANTI-LAG (Max 300)
+            if (particles.length > 300) {
+                particles.splice(0, particles.length - 300);
             }
 
             for (let i = particles.length - 1; i >= 0; i--) {
@@ -544,7 +581,7 @@
             }
         }
 
-        setInterval(launchRandomFirework, 1300);
+        setInterval(launchRandomFirework, 1500); // Waktu spawn sedikit diperlambat
         animate();
 
         window.addEventListener('pointerdown', (e) => {
