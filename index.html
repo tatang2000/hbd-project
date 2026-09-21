@@ -8,14 +8,14 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
         
         body { 
-            background-color: #000; /* Background hitam ala Visual Novel */
+            background-color: #000; 
             color: #fff; 
             overflow: hidden; 
             height: 100vh;
             width: 100vw;
         }
 
-        /* LAYAR AWAL UNTUK TRIGGER AUDIO (Wajib karena browser blokir autoplay tanpa klik) */
+        /* LAYAR AWAL */
         #startScreen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -38,12 +38,13 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: 0.3s;
+            box-shadow: 0 0 10px rgba(255,255,255,0.2);
         }
 
         #startScreen button:hover {
             background: #fff;
             color: #000;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+            box-shadow: 0 0 30px rgba(255,255,255,0.8);
         }
 
         /* KANVAS KEMBANG API */
@@ -61,18 +62,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            pointer-events: none; /* Supaya klik kembang api nembus ke canvas */
+            pointer-events: none; 
         }
 
         .text-box {
             width: 80%;
             max-width: 900px;
             min-height: 250px;
-            background: rgba(0, 0, 0, 0.6); /* Kotak teks transparan gelap */
+            background: rgba(0, 0, 0, 0.7); 
             border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
             font-size: 1.6rem;
             line-height: 1.8;
             text-align: center;
@@ -80,10 +81,10 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            pointer-events: auto; /* Teks box tidak menembakkan kembang api */
+            pointer-events: auto; 
         }
 
-        /* TOMBOL PANAH (KIRI KANAN) */
+        /* TOMBOL PANAH */
         .nav-btn {
             position: absolute;
             top: 50%;
@@ -93,53 +94,51 @@
             border: none;
             font-size: 4rem;
             cursor: pointer;
-            pointer-events: auto; /* Tombol bisa diklik */
+            pointer-events: auto; 
             transition: 0.3s ease;
             padding: 20px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
         }
         
         .nav-btn:hover {
             color: #fff;
-            text-shadow: 0 0 15px #fff;
+            text-shadow: 0 0 25px #fff;
         }
 
         .left-btn { left: 30px; }
         .right-btn { right: 30px; }
 
-        /* YOUTUBE IFRAME (DISEMBUNYIKAN) */
+        /* YOUTUBE IFRAME */
         #player { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- YOUTUBE PLAYER UNTUK BACKGROUND MUSIC -->
     <div id="player"></div>
 
-    <!-- START SCREEN (Layar utama penekan tombol agar audio diizinkan menyala) -->
     <div id="startScreen">
         <button onclick="startApp()">Buka Pesan</button>
     </div>
 
-    <!-- KANVAS PETASAN -->
     <canvas id="fwCanvas"></canvas>
 
-    <!-- UI VISUAL NOVEL -->
     <div id="vn-container" style="display: none;">
         <button class="nav-btn left-btn" onclick="turnPrevPage()">&#10094;</button>
         <div class="text-box" id="textBox"></div>
         <button class="nav-btn right-btn" onclick="turnNextPage()">&#10095;</button>
     </div>
 
-    <!-- SCRIPT YOUTUBE API (Untuk Play Lagu Tanpa Tampilan Video) -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // --- LOGIKA AUDIO YOUTUBE ---
+        // --- 1. LOGIKA AUDIO YOUTUBE & AUDIO SINTETIS ---
         var player;
+        var audioCtx;
+
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 height: '0',
                 width: '0',
-                videoId: 'IzvZ0gOXiNA', // ID Video Lirik Jamrud - Selamat Ulang Tahun
+                videoId: 'IzvZ0gOXiNA', 
                 playerVars: {
                     'autoplay': 0,
                     'loop': 1,
@@ -148,21 +147,56 @@
             });
         }
 
+        // Generator Suara Ledakan Petasan (White Noise + Lowpass Filter)
+        function playExplosionSound() {
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const bufferSize = audioCtx.sampleRate * 0.8; // Durasi 0.8 detik
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            // Membuat suara desisan acak (noise)
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+            
+            // Memfilter suara agar terdengar seperti "Thud/Boom" dari jauh
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+            filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.5);
+            
+            // Mengatur Volume (Sengaja dikecilkan agar lagu tetap dominan)
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime); // Volume rendah (0.06)
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+            
+            noise.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            noise.start();
+        }
+
         function startApp() {
-            // Sembunyikan layar awal dan munculkan UI VN
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('vn-container').style.display = 'flex';
             
-            // Putar lagu Jamrud
+            // Inisialisasi Audio Context untuk ledakan
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
             if(player && player.playVideo) {
                 player.playVideo();
             }
 
-            // Mulai ngetik
             typeWriter();
         }
 
-        // --- LOGIKA VISUAL NOVEL ---
+        // --- 2. LOGIKA VISUAL NOVEL ---
         const pages = [
             "Hallo Intan...\n\nSebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe.\n\n",
             "Aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy.",
@@ -182,7 +216,6 @@
                 isTyping = true;
                 let char = pages[currentPage].charAt(charIndex);
                 
-                // Konversi Enter (\n) menjadi baris baru (br)
                 if (char === '\n') {
                     document.getElementById("textBox").innerHTML += "<br>";
                 } else {
@@ -191,12 +224,9 @@
                 
                 charIndex++;
                 
-                // Kecepatan normal mesin tik
                 let speed = 45; 
-                
-                // JIKA HALAMAN TERAKHIR, JAUH LEBIH LAMBAT
                 if (currentPage === pages.length - 1) {
-                    speed = 180; // Sangat lambat dan dramatis
+                    speed = 180; // Efek super lambat di kalimat terakhir
                 }
 
                 typingTimer = setTimeout(typeWriter, speed);
@@ -207,12 +237,10 @@
 
         function turnNextPage() {
             if (isTyping) {
-                // JIKA MASIH NGETIK, MUNCULKAN SEMUA TEKS SEKALIGUS (FITUR SKIP)
                 clearTimeout(typingTimer);
                 document.getElementById("textBox").innerHTML = pages[currentPage].replace(/\n/g, '<br>');
                 isTyping = false;
             } else {
-                // JIKA SUDAH SELESAI NGETIK, LANJUT HALAMAN BERIKUTNYA
                 if (currentPage < pages.length - 1) {
                     currentPage++;
                     charIndex = 0;
@@ -223,7 +251,6 @@
         }
 
         function turnPrevPage() {
-            // MUNDUR KE HALAMAN SEBELUMNYA
             if (currentPage > 0) {
                 clearTimeout(typingTimer);
                 currentPage--;
@@ -234,14 +261,14 @@
             }
         }
 
-        // --- LOGIKA KEMBANG API FISIKA (Sama seperti sebelumnya) ---
+        // --- 3. LOGIKA KEMBANG API & CAHAYA ---
         const canvas = document.getElementById('fwCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         let particles = [];
-        const gravity = 0.05;
+        const gravity = 0.04; // Sedikit lebih lambat jatuhnya agar cahaya lebih lama terlihat
         const colors = ['#ff0043', '#14fc56', '#1e7fff', '#e600ff', '#ffaa00'];
 
         class Particle {
@@ -258,8 +285,13 @@
             draw() {
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
+                
+                // PENCAHAYAAN (GLOW EFFECT)
+                ctx.shadowBlur = this.isFirework ? 15 : 25; 
+                ctx.shadowColor = this.color;
+                
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.isFirework ? 3 : 2, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, this.isFirework ? 3 : 2.5, 0, Math.PI * 2);
                 ctx.fillStyle = this.color;
                 ctx.fill();
                 ctx.restore();
@@ -274,18 +306,19 @@
                     this.velocity.y += gravity; 
                 } else {
                     this.velocity.y += gravity; 
-                    this.velocity.x *= 0.98; 
-                    this.velocity.y *= 0.98;
-                    this.life -= 1.5;
+                    this.velocity.x *= 0.96; // Gesekan udara
+                    this.velocity.y *= 0.96;
+                    this.life -= 1.2;
                     this.alpha = this.life / 100;
                 }
             }
         }
 
         function createExplosion(x, y) {
-            for (let i = 0; i < 50; i++) {
+            playExplosionSound(); // Panggil suara ledakan
+            for (let i = 0; i < 60; i++) { // Jumlah percikan diperbanyak agar lebih terang
                 const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 4 + 1;
+                const speed = Math.random() * 5 + 1;
                 particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
                     x: Math.cos(angle) * speed,
                     y: Math.sin(angle) * speed
@@ -294,22 +327,27 @@
         }
 
         function launchRandomFirework() {
-            // Hanya munculkan otomatis jika layarnya sudah dibuka (startScreen hilang)
             if(document.getElementById('startScreen').style.display === 'none') {
                 const x = Math.random() * canvas.width;
                 const y = canvas.height;
                 particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
-                    x: (Math.random() - 0.5) * 2, 
-                    y: -(Math.random() * 4 + 6) 
+                    x: (Math.random() - 0.5) * 2.5, 
+                    y: -(Math.random() * 4 + 7) 
                 }, true));
             }
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            // Jejak kembang api agak gelap karena tema malam
+            
+            // Menghapus shadow sebelum membersihkan canvas agar tidak nge-glitch
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.shadowBlur = 0;
             ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Merubah mode komposisi agar partikel yang bertumpuk menjadi lebih terang (menyilaukan seperti cahaya asli)
+            ctx.globalCompositeOperation = 'lighter';
 
             for (let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
@@ -325,12 +363,10 @@
             }
         }
 
-        setInterval(launchRandomFirework, 1500);
+        setInterval(launchRandomFirework, 1300);
         animate();
 
-        // Kembang api mengarah ke area kosong yang di klik
         window.addEventListener('pointerdown', (e) => {
-            // Mencegah kembang api meluncur kalau user nge-klik teks box atau tombol VN
             if(e.target.tagName === 'BUTTON' || e.target.closest('.text-box')) return; 
 
             const targetX = e.clientX;
