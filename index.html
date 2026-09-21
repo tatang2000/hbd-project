@@ -15,7 +15,6 @@
             width: 100vw;
         }
 
-        /* LAYAR AWAL */
         #startScreen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -47,14 +46,12 @@
             box-shadow: 0 0 30px rgba(255,255,255,0.8);
         }
 
-        /* KANVAS KEMBANG API */
         canvas {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1; 
         }
 
-        /* WADAH VISUAL NOVEL */
         #vn-container {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -82,9 +79,9 @@
             align-items: center;
             flex-direction: column;
             pointer-events: auto; 
+            transition: all 0.5s;
         }
 
-        /* TOMBOL PANAH */
         .nav-btn {
             position: absolute;
             top: 50%;
@@ -108,8 +105,95 @@
         .left-btn { left: 30px; }
         .right-btn { right: 30px; }
 
-        /* YOUTUBE IFRAME */
         #player { display: none; }
+
+        /* --- CSS KUE & LILIN --- */
+        .cake-container {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s forwards;
+        }
+        .cake-wrapper {
+            position: relative;
+        }
+        .cake-flame {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 24px;
+            background: #ffaa00;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 15px #ffaa00, 0 0 30px #ff0043;
+            cursor: pointer; /* Memberitahu bahwa ini bisa diklik */
+            animation: flicker 0.1s infinite alternate;
+            z-index: 3;
+            transition: 0.3s;
+        }
+        .cake-flame:hover {
+            transform: translateX(-50%) scale(1.2);
+        }
+        .cake-smoke {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: #ccc;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 2;
+        }
+        .cake-smoke.puff {
+            animation: blowOutSmoke 1.5s forwards;
+        }
+        .cake-candle {
+            width: 12px;
+            height: 35px;
+            background: #fff;
+            margin: 0 auto;
+            border-radius: 3px;
+            position: relative;
+            z-index: 1;
+        }
+        .cake-body {
+            width: 120px;
+            height: 50px;
+            background: #fff;
+            border-radius: 8px;
+            border-bottom: 6px solid #aaa;
+            margin-top: -5px;
+            position: relative;
+            z-index: 1;
+        }
+        .tiup-text {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #aaa;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* ANIMASI KUE */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 1; }
+            100% { transform: translateX(-50%) scale(1.1) rotate(2deg); opacity: 0.8; }
+        }
+        @keyframes blowOutSmoke {
+            0% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -60px) scale(3); opacity: 0; }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -123,14 +207,13 @@
     <canvas id="fwCanvas"></canvas>
 
     <div id="vn-container" style="display: none;">
-        <button class="nav-btn left-btn" onclick="turnPrevPage()">&#10094;</button>
+        <button class="nav-btn left-btn" id="prevBtn" onclick="turnPrevPage()">&#10094;</button>
         <div class="text-box" id="textBox"></div>
-        <button class="nav-btn right-btn" onclick="turnNextPage()">&#10095;</button>
+        <button class="nav-btn right-btn" id="nextBtn" onclick="turnNextPage()">&#10095;</button>
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // --- 1. LOGIKA AUDIO YOUTUBE & AUDIO SINTETIS ---
         var player;
         var audioCtx;
 
@@ -147,16 +230,14 @@
             });
         }
 
-        // Generator Suara Ledakan Petasan (White Noise + Lowpass Filter)
         function playExplosionSound() {
             if (!audioCtx) return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
             
-            const bufferSize = audioCtx.sampleRate * 0.8; // Durasi 0.8 detik
+            const bufferSize = audioCtx.sampleRate * 0.8; 
             const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const data = buffer.getChannelData(0);
             
-            // Membuat suara desisan acak (noise)
             for (let i = 0; i < bufferSize; i++) {
                 data[i] = Math.random() * 2 - 1;
             }
@@ -164,15 +245,13 @@
             const noise = audioCtx.createBufferSource();
             noise.buffer = buffer;
             
-            // Memfilter suara agar terdengar seperti "Thud/Boom" dari jauh
             const filter = audioCtx.createBiquadFilter();
             filter.type = 'lowpass';
             filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
             filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.5);
             
-            // Mengatur Volume (Sengaja dikecilkan agar lagu tetap dominan)
             const gainNode = audioCtx.createGain();
-            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime); // Volume rendah (0.06)
+            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime); 
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
             
             noise.connect(filter);
@@ -186,30 +265,84 @@
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('vn-container').style.display = 'flex';
             
-            // Inisialisasi Audio Context untuk ledakan
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
             if(player && player.playVideo) {
                 player.playVideo();
             }
 
+            updateButtons(); 
             typeWriter();
         }
 
-        // --- 2. LOGIKA VISUAL NOVEL ---
+        function updateButtons() {
+            if (currentPage === 0) {
+                document.getElementById('prevBtn').style.display = 'none';
+            } else {
+                document.getElementById('prevBtn').style.display = 'block';
+            }
+
+            if (currentPage === pages.length - 1) {
+                document.getElementById('nextBtn').style.display = 'none';
+            } else {
+                document.getElementById('nextBtn').style.display = 'block';
+            }
+        }
+
         const pages = [
-            "Hallo Intan...\n\nSebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe.\n\n",
-            "Aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy.",
-            "Aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu.\n\nAku minta maaf juga jarang banget hubungin kamu.\n\nAku minta maaf ketika aku ngomong ada masalah di ingatan kamu.",
-            "Niatnya aku ngasih link pada jam 00:00 cuman kurang tau nih bisa atau engga.\n\nAku juga bingung mau kasih teks seperti apa...",
+            "Hallo Intan...\n\nSebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe.",
+            "Aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy🎉🎉.",
+            "Aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu.",
+            "Aku ada puisi yang bagusss banget",
+            "come to me like a spring day holding\ncherry blossoms, and give me a\nmidsummer tropical night.\n\nbefore the fox rain of autumn wets the\nmaple leaves, make me forget how to\nface this wistful scenery alone.\n\nplease become my weakness.\nso the coming winter won't be cold,\ni offer you my heart.",
             "Semoga di umur yang baru ini kamu selalu diberikan kebahagiaan, kesehatan, dan semua yang kamu impikan bisa tercapai.",
-            "I love you so much intan septiani basyiroh...\n\n\nganbatteee anataaaaa❤️"
+            "I love you so much intan septiani basyiroh...\n\n\nganbatte neeee anataaaaa❤️"
         ];
 
         let currentPage = 0;
         let charIndex = 0;
         let isTyping = false;
         let typingTimer;
+        let finaleTriggered = false;
+
+        // FUNGSI MEMUNCULKAN KUE
+        function showCake() {
+            if(document.getElementById('cakeUI')) return; 
+            
+            const cakeHTML = `
+                <div class="cake-container" id="cakeUI">
+                    <div class="cake-wrapper">
+                        <div class="cake-flame" id="flame" onclick="blowCandle()"></div>
+                        <div class="cake-smoke" id="smoke"></div>
+                        <div class="cake-candle"></div>
+                        <div class="cake-body"></div>
+                    </div>
+                    <p class="tiup-text" id="tiupText">(Klik apinya untuk meniup lilin)</p>
+                </div>
+            `;
+            document.getElementById("textBox").innerHTML += cakeHTML;
+        }
+
+        // FUNGSI SAAT LILIN DITIUP (DIKLIK)
+        function blowCandle() {
+            if(finaleTriggered) return;
+            finaleTriggered = true; // Tandai agar kembang api finale meledak
+            
+            // Matikan api dan munculkan asap
+            document.getElementById('flame').style.display = 'none';
+            document.getElementById('smoke').classList.add('puff');
+            
+            // Ubah teks
+            document.getElementById('tiupText').innerHTML = "Yeayyy! Happy Birthday! 🎉";
+            document.getElementById('tiupText').style.animation = 'none';
+            document.getElementById('tiupText').style.opacity = '1';
+            document.getElementById('tiupText').style.color = '#fff';
+            
+            // Tunggu 0.8 detik (biar asapnya naik dulu), baru luncurkan kembang api finale!
+            setTimeout(() => {
+                launchFinale();
+            }, 800);
+        }
 
         function typeWriter() {
             if (charIndex < pages[currentPage].length) {
@@ -226,12 +359,17 @@
                 
                 let speed = 45; 
                 if (currentPage === pages.length - 1) {
-                    speed = 180; // Efek super lambat di kalimat terakhir
+                    speed = 180; 
                 }
 
                 typingTimer = setTimeout(typeWriter, speed);
             } else {
                 isTyping = false;
+                
+                // Jika ketikan selesai dan ini halaman terakhir, munculkan kue!
+                if (currentPage === pages.length - 1 && !finaleTriggered) {
+                    showCake();
+                }
             }
         }
 
@@ -240,11 +378,17 @@
                 clearTimeout(typingTimer);
                 document.getElementById("textBox").innerHTML = pages[currentPage].replace(/\n/g, '<br>');
                 isTyping = false;
+                
+                // Jika di-skip saat mengetik halaman terakhir, langsung munculkan kue
+                if (currentPage === pages.length - 1 && !finaleTriggered) {
+                    showCake();
+                }
             } else {
                 if (currentPage < pages.length - 1) {
                     currentPage++;
                     charIndex = 0;
                     document.getElementById("textBox").innerHTML = "";
+                    updateButtons(); 
                     typeWriter();
                 }
             }
@@ -257,19 +401,21 @@
                 charIndex = 0;
                 document.getElementById("textBox").innerHTML = "";
                 isTyping = false;
+                finaleTriggered = false; 
+                updateButtons(); 
                 typeWriter();
             }
         }
 
-        // --- 3. LOGIKA KEMBANG API & CAHAYA ---
+        // --- LOGIKA KEMBANG API & GRAND FINALE ---
         const canvas = document.getElementById('fwCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         let particles = [];
-        const gravity = 0.04; // Sedikit lebih lambat jatuhnya agar cahaya lebih lama terlihat
-        const colors = ['#ff0043', '#14fc56', '#1e7fff', '#e600ff', '#ffaa00'];
+        const gravity = 0.04; 
+        const colors = ['#ff0043', '#14fc56', '#1e7fff', '#e600ff', '#ffaa00', '#00ffff', '#ffffff'];
 
         class Particle {
             constructor(x, y, color, velocity, isFirework) {
@@ -285,8 +431,6 @@
             draw() {
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
-                
-                // PENCAHAYAAN (GLOW EFFECT)
                 ctx.shadowBlur = this.isFirework ? 15 : 25; 
                 ctx.shadowColor = this.color;
                 
@@ -306,7 +450,7 @@
                     this.velocity.y += gravity; 
                 } else {
                     this.velocity.y += gravity; 
-                    this.velocity.x *= 0.96; // Gesekan udara
+                    this.velocity.x *= 0.96; 
                     this.velocity.y *= 0.96;
                     this.life -= 1.2;
                     this.alpha = this.life / 100;
@@ -315,8 +459,8 @@
         }
 
         function createExplosion(x, y) {
-            playExplosionSound(); // Panggil suara ledakan
-            for (let i = 0; i < 60; i++) { // Jumlah percikan diperbanyak agar lebih terang
+            playExplosionSound(); 
+            for (let i = 0; i < 60; i++) { 
                 const angle = Math.random() * Math.PI * 2;
                 const speed = Math.random() * 5 + 1;
                 particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
@@ -337,16 +481,21 @@
             }
         }
 
+        function launchFinale() {
+            let count = 0;
+            const finaleInterval = setInterval(() => {
+                launchRandomFirework();
+                count++;
+                if (count > 25) clearInterval(finaleInterval); // Dibuat lebih banyak (25 tembakan)
+            }, 150);
+        }
+
         function animate() {
             requestAnimationFrame(animate);
-            
-            // Menghapus shadow sebelum membersihkan canvas agar tidak nge-glitch
             ctx.globalCompositeOperation = 'source-over';
             ctx.shadowBlur = 0;
             ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Merubah mode komposisi agar partikel yang bertumpuk menjadi lebih terang (menyilaukan seperti cahaya asli)
             ctx.globalCompositeOperation = 'lighter';
 
             for (let i = particles.length - 1; i >= 0; i--) {
@@ -367,7 +516,8 @@
         animate();
 
         window.addEventListener('pointerdown', (e) => {
-            if(e.target.tagName === 'BUTTON' || e.target.closest('.text-box')) return; 
+            // Jangan luncurkan kembang api kalau ngeklik tombol, text box, atau API LILIN
+            if(e.target.tagName === 'BUTTON' || e.target.closest('.text-box') || e.target.id === 'flame') return; 
 
             const targetX = e.clientX;
             const targetY = e.clientY;
