@@ -142,22 +142,22 @@
         }
         .polaroid.show:hover img { filter: grayscale(0%); }
 
-        /* Posisi Awal (Sembunyi di tengah) */
+        /* Posisi Awal (Sembunyi di tengah text box) */
         .p1, .p2, .p3, .p4, .p5, .p6, .p7, .p8, .p9, .p10 {
             top: 60%; left: 50%; transform: translate(-50%, 50px) rotate(0deg) scale(0.5); z-index: 15;
         }
 
-        /* --- POSISI AKHIR: TUMPUKAN ACAK DI ATAS (Tengah Aman) --- */
-        .p1.show { opacity: 1; top: 18%; left: 48%; transform: translate(-50%, -50%) rotate(-15deg) scale(1); z-index: 21; }
-        .p2.show { opacity: 1; top: 22%; left: 52%; transform: translate(-50%, -50%) rotate(8deg) scale(1); z-index: 22; }
-        .p3.show { opacity: 1; top: 15%; left: 50%; transform: translate(-50%, -50%) rotate(-5deg) scale(1); z-index: 23; }
-        .p4.show { opacity: 1; top: 25%; left: 45%; transform: translate(-50%, -50%) rotate(12deg) scale(1); z-index: 24; }
-        .p5.show { opacity: 1; top: 20%; left: 55%; transform: translate(-50%, -50%) rotate(-10deg) scale(1); z-index: 25; }
-        .p6.show { opacity: 1; top: 28%; left: 48%; transform: translate(-50%, -50%) rotate(18deg) scale(1); z-index: 26; }
-        .p7.show { opacity: 1; top: 16%; left: 46%; transform: translate(-50%, -50%) rotate(-22deg) scale(1); z-index: 27; }
-        .p8.show { opacity: 1; top: 24%; left: 54%; transform: translate(-50%, -50%) rotate(6deg) scale(1); z-index: 28; }
-        .p9.show { opacity: 1; top: 19%; left: 51%; transform: translate(-50%, -50%) rotate(-8deg) scale(1); z-index: 29; }
-        .p10.show { opacity: 1; top: 26%; left: 50%; transform: translate(-50%, -50%) rotate(4deg) scale(1); z-index: 30; }
+        /* --- POSISI AKHIR: ZIG-ZAG DI BAGIAN ATAS LAYAR AGAR SEMUA TERLIHAT --- */
+        .p1.show { opacity: 1; top: 22%; left: 10%; transform: translate(-50%, -50%) rotate(-12deg) scale(1); z-index: 21; }
+        .p2.show { opacity: 1; top: 12%; left: 19%; transform: translate(-50%, -50%) rotate(8deg) scale(1); z-index: 22; }
+        .p3.show { opacity: 1; top: 26%; left: 28%; transform: translate(-50%, -50%) rotate(-15deg) scale(1); z-index: 23; }
+        .p4.show { opacity: 1; top: 14%; left: 37%; transform: translate(-50%, -50%) rotate(10deg) scale(1); z-index: 24; }
+        .p5.show { opacity: 1; top: 27%; left: 46%; transform: translate(-50%, -50%) rotate(-5deg) scale(1); z-index: 25; }
+        .p6.show { opacity: 1; top: 11%; left: 55%; transform: translate(-50%, -50%) rotate(14deg) scale(1); z-index: 26; }
+        .p7.show { opacity: 1; top: 25%; left: 64%; transform: translate(-50%, -50%) rotate(-8deg) scale(1); z-index: 27; }
+        .p8.show { opacity: 1; top: 15%; left: 73%; transform: translate(-50%, -50%) rotate(18deg) scale(1); z-index: 28; }
+        .p9.show { opacity: 1; top: 28%; left: 82%; transform: translate(-50%, -50%) rotate(-10deg) scale(1); z-index: 29; }
+        .p10.show { opacity: 1; top: 13%; left: 91%; transform: translate(-50%, -50%) rotate(12deg) scale(1); z-index: 30; }
 
         /* --- MODAL ZOOM FOTO --- */
         #photoModal {
@@ -258,6 +258,7 @@
 
     <div id="vn-container" style="display: none;">
         
+        <!-- FOTO DISUSUN MENYEBAR DI ATAS SEPERTI JEMURAN/GARLAND -->
         <div class="polaroid p1" id="polaroid-1" onclick="openPhoto('foto1.jpg')"><img src="foto1.jpg"></div>
         <div class="polaroid p2" id="polaroid-2" onclick="openPhoto('foto2.jpg')"><img src="foto2.jpg"></div>
         <div class="polaroid p3" id="polaroid-3" onclick="openPhoto('foto3.jpg')"><img src="foto3.jpg"></div>
