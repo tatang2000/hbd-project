@@ -15,12 +15,12 @@
             width: 100vw;
         }
 
-        /* --- PEMANDANGAN FAJAR (SUNRISE BACKGROUND) --- */
+        /* --- PEMANDANGAN FAJAR (SUNRISE) --- */
         #sunrise-bg {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0; /* Paling belakang */
-            opacity: 0; /* Tersembunyi di awal */
+            z-index: 0; 
+            opacity: 0; 
             transition: opacity 6s ease-in-out;
         }
         #sunrise-sky {
@@ -31,11 +31,11 @@
             position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
             background: linear-gradient(to bottom, #004e92 0%, #000428 100%);
             z-index: 2;
-            border-top: 1px solid #1a8cff; /* Garis horizon laut */
+            border-top: 1px solid #1a8cff; 
         }
         .sun {
             position: absolute;
-            bottom: 35%; /* Bersembunyi di balik laut */
+            bottom: 35%; 
             left: 50%;
             transform: translateX(-50%);
             width: 120px;
@@ -44,14 +44,10 @@
             border-radius: 50%;
             box-shadow: 0 0 60px #ff9900;
             transition: bottom 6s ease-in-out;
-            z-index: 1; /* Di antara langit dan laut */
+            z-index: 1; 
         }
-        #sunrise-bg.dawn-active {
-            opacity: 1;
-        }
-        #sunrise-bg.dawn-active .sun {
-            bottom: 48%; /* Matahari terbit ke atas cakrawala */
-        }
+        #sunrise-bg.dawn-active { opacity: 1; }
+        #sunrise-bg.dawn-active .sun { bottom: 48%; }
 
         #startScreen {
             position: absolute;
@@ -121,7 +117,6 @@
             position: relative;
         }
 
-        /* --- KURSOR MENGETIK BERKEDIP --- */
         .cursor {
             display: inline-block;
             width: 12px;
@@ -135,30 +130,33 @@
             50% { opacity: 0; }
         }
 
-        /* --- FOTO POLAROID TERSEMBUNYI --- */
+        /* --- 3 FOTO POLAROID BERTEBARAN --- */
         .polaroid {
             position: absolute;
-            top: -50px; /* Muncul sedikit menyembul dari kotak teks */
-            left: 50%;
-            transform: translateX(-50%) translateY(-20px) rotate(-3deg);
             background: #fff;
-            padding: 10px 10px 30px 10px;
+            padding: 8px 8px 25px 8px; /* Bingkai ala polaroid */
             box-shadow: 0 10px 20px rgba(0,0,0,0.6);
             opacity: 0;
             z-index: 20;
             pointer-events: none;
-            transition: all 2s ease-in-out;
+            transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .polaroid img {
-            width: 150px;
-            height: 150px;
+            width: 130px;
+            height: 130px;
             object-fit: cover;
-            filter: grayscale(100%); /* Efek monokrom hitam putih */
+            filter: grayscale(100%); /* Efek Hitam Putih */
         }
-        .polaroid.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0) rotate(-3deg);
-        }
+        
+        /* Posisi awal (agak ke bawah dan transparan) */
+        .p1 { top: -30px; left: 25%; transform: translateX(-50%) translateY(30px) rotate(-15deg); }
+        .p2 { top: -60px; left: 50%; transform: translateX(-50%) translateY(30px) rotate(5deg); z-index: 21; }
+        .p3 { top: -15px; left: 75%; transform: translateX(-50%) translateY(30px) rotate(22deg); }
+
+        /* Posisi akhir saat dimunculkan (menyebar ke atas teks box) */
+        .p1.show { opacity: 1; transform: translateX(-50%) translateY(0) rotate(-15deg); }
+        .p2.show { opacity: 1; transform: translateX(-50%) translateY(0) rotate(5deg); }
+        .p3.show { opacity: 1; transform: translateX(-50%) translateY(0) rotate(22deg); }
 
         .nav-btn {
             position: absolute;
@@ -175,11 +173,7 @@
             text-shadow: 0 0 10px rgba(255,255,255,0.1);
         }
         
-        .nav-btn:hover {
-            color: #fff;
-            text-shadow: 0 0 25px #fff;
-        }
-
+        .nav-btn:hover { color: #fff; text-shadow: 0 0 25px #fff; }
         .left-btn { left: 30px; }
         .right-btn { right: 30px; }
 
@@ -197,140 +191,70 @@
         
         .click-indicator {
             position: absolute;
-            top: -75px; 
-            left: 50%;
+            top: -75px; left: 50%;
             transform: translateX(-50%);
-            color: #ffaa00;
-            font-size: 2.5rem;
+            color: #ffaa00; font-size: 2.5rem;
             animation: bounceArrow 1s infinite;
-            pointer-events: none;
-            z-index: 5;
+            pointer-events: none; z-index: 5;
             text-shadow: 0 0 15px #ff0043;
         }
 
-        .cake-wrapper {
-            position: relative;
-            width: 150px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .cake-wrapper { position: relative; width: 150px; display: flex; flex-direction: column; align-items: center; }
         
         .cake-flame {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 16px;
-            height: 24px;
-            background: #ffaa00;
+            position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+            width: 16px; height: 24px; background: #ffaa00;
             border-radius: 50% 50% 20% 20%;
             box-shadow: 0 0 15px #ffaa00, 0 0 30px #ff0043;
-            cursor: pointer; 
-            animation: flicker 0.1s infinite alternate;
-            z-index: 6;
-            transition: 0.3s;
+            cursor: pointer; animation: flicker 0.1s infinite alternate; z-index: 6; transition: 0.3s;
         }
-        
-        .cake-flame:hover {
-            transform: translateX(-50%) scale(1.2);
-        }
+        .cake-flame:hover { transform: translateX(-50%) scale(1.2); }
         
         .cake-smoke {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 10px;
-            height: 10px;
-            background: #ccc;
-            border-radius: 50%;
-            opacity: 0;
-            z-index: 5;
+            position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+            width: 10px; height: 10px; background: #ccc; border-radius: 50%; opacity: 0; z-index: 5;
         }
-        
-        .cake-smoke.puff {
-            animation: blowOutSmoke 1.5s forwards;
-        }
+        .cake-smoke.puff { animation: blowOutSmoke 1.5s forwards; }
         
         .cake-candle {
-            width: 12px;
-            height: 40px;
+            width: 12px; height: 40px;
             background: repeating-linear-gradient(45deg, #fff, #fff 4px, #ff4d4d 4px, #ff4d4d 8px);
-            margin: 0 auto;
-            border-radius: 3px;
-            position: relative;
-            z-index: 2;
+            margin: 0 auto; border-radius: 3px; position: relative; z-index: 2;
         }
 
         .cake-frosting {
-            position: absolute;
-            width: 140px;
-            height: 35px;
-            background: #ffcce6; /* Pink Muda */
-            border-radius: 20px;
-            top: 30px; 
-            z-index: 3;
-            box-shadow: 0 5px 5px rgba(0,0,0,0.3);
+            position: absolute; width: 140px; height: 35px; background: #ffcce6;
+            border-radius: 20px; top: 30px; z-index: 3; box-shadow: 0 5px 5px rgba(0,0,0,0.3);
         }
 
         .berry {
-            position: absolute;
-            width: 18px; height: 20px;
-            background: radial-gradient(circle at 30% 30%, #ff6666, #b30000); /* Strawberry Merah */
-            border-radius: 50% 50% 40% 40%;
-            z-index: 4;
-            box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            position: absolute; width: 18px; height: 20px;
+            background: radial-gradient(circle at 30% 30%, #ff6666, #b30000);
+            border-radius: 50% 50% 40% 40%; z-index: 4; box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
         }
-        .berry1 { left: 20px; top: 25px; }
-        .berry2 { left: 65px; top: 20px; }
-        .berry3 { right: 20px; top: 28px; }
+        .berry1 { left: 20px; top: 25px; } .berry2 { left: 65px; top: 20px; } .berry3 { right: 20px; top: 28px; }
         
         .cake-body {
-            width: 124px;
-            height: 60px;
-            background: linear-gradient(to right, #d85c8a, #ff7eb3, #d85c8a); /* Gradien Pink */
-            border-radius: 5px 5px 8px 8px;
-            position: relative;
-            z-index: 1;
-            margin-top: -15px; 
-            box-shadow: inset 0 -10px 15px rgba(0,0,0,0.4);
+            width: 124px; height: 60px;
+            background: linear-gradient(to right, #d85c8a, #ff7eb3, #d85c8a);
+            border-radius: 5px 5px 8px 8px; position: relative; z-index: 1;
+            margin-top: -15px; box-shadow: inset 0 -10px 15px rgba(0,0,0,0.4);
         }
         
         .tiup-text {
-            margin-top: 25px;
-            font-size: 1.1rem;
-            color: #ffaa00;
-            font-weight: bold;
-            animation: pulse 1.5s infinite;
-            letter-spacing: 1px;
+            margin-top: 25px; font-size: 1.1rem; color: #ffaa00; font-weight: bold;
+            animation: pulse 1.5s infinite; letter-spacing: 1px;
         }
 
-        @keyframes bounceArrow {
-            0%, 100% { transform: translate(-50%, 0); }
-            50% { transform: translate(-50%, -15px); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes flicker {
-            0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 1; }
-            100% { transform: translateX(-50%) scale(1.1) rotate(2deg); opacity: 0.8; }
-        }
-        @keyframes blowOutSmoke {
-            0% { transform: translate(-50%, 0) scale(1); opacity: 1; }
-            100% { transform: translate(-50%, -60px) scale(3); opacity: 0; }
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
+        @keyframes bounceArrow { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -15px); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes flicker { 0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 1; } 100% { transform: translateX(-50%) scale(1.1) rotate(2deg); opacity: 0.8; } }
+        @keyframes blowOutSmoke { 0% { transform: translate(-50%, 0) scale(1); opacity: 1; } 100% { transform: translate(-50%, -60px) scale(3); opacity: 0; } }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <!-- YOUTUBE PLAYER -->
     <div id="player"></div>
 
     <!-- BACKGROUND FAJAR LAUT & LANGIT -->
@@ -352,11 +276,11 @@
     <div id="vn-container" style="display: none;">
         <button class="nav-btn left-btn" id="prevBtn" onclick="turnPrevPage()">&#10094;</button>
         <div class="text-box" id="textBoxBox">
-            <!-- FOTO POLAROID -->
-            <div class="polaroid" id="polaroid-frame">
-                <!-- NAMA FILE FOTO KAMU (foto.jpg) DIPANGGIL DI SINI -->
-                <img src="foto.jpg" alt="Memory">
-            </div>
+            
+            <!-- 3 FOTO POLAROID BERTEBARAN -->
+            <div class="polaroid p1" id="polaroid-1"><img src="foto1.jpg" alt="Memory 1"></div>
+            <div class="polaroid p2" id="polaroid-2"><img src="foto2.jpg" alt="Memory 2"></div>
+            <div class="polaroid p3" id="polaroid-3"><img src="foto3.jpg" alt="Memory 3"></div>
             
             <div id="textBox"></div>
         </div>
@@ -373,11 +297,7 @@
                 height: '0',
                 width: '0',
                 videoId: 'W-NLEEyycao', 
-                playerVars: {
-                    'autoplay': 0,
-                    'loop': 1,
-                    'controls': 0
-                }
+                playerVars: { 'autoplay': 0, 'loop': 1, 'controls': 0 }
             });
         }
 
@@ -388,76 +308,48 @@
             const bufferSize = audioCtx.sampleRate * 0.5; 
             const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const data = buffer.getChannelData(0);
-            
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
+            for (let i = 0; i < bufferSize; i++) { data[i] = Math.random() * 2 - 1; }
             
             const noise = audioCtx.createBufferSource();
             noise.buffer = buffer;
-            
             const filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(800, audioCtx.currentTime);
+            filter.type = 'lowpass'; filter.frequency.setValueAtTime(800, audioCtx.currentTime);
             filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
             
             const gainNode = audioCtx.createGain();
             gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime); 
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
             
-            noise.connect(filter);
-            filter.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
+            noise.connect(filter); filter.connect(gainNode); gainNode.connect(audioCtx.destination);
             noise.start();
         }
 
         function startApp() {
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('vn-container').style.display = 'flex';
-            
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-            if(player && player.playVideo) {
-                player.playVideo();
-            }
-
-            updateButtons(); 
-            typeWriter();
+            if(player && player.playVideo) { player.playVideo(); }
+            updateButtons(); typeWriter();
         }
 
         function updateButtons() {
-            if (currentPage === 0) {
-                document.getElementById('prevBtn').style.display = 'none';
-            } else {
-                document.getElementById('prevBtn').style.display = 'block';
-            }
-
-            if (currentPage === pages.length - 1) {
-                document.getElementById('nextBtn').style.display = 'none';
-            } else {
-                document.getElementById('nextBtn').style.display = 'block';
-            }
+            document.getElementById('prevBtn').style.display = (currentPage === 0) ? 'none' : 'block';
+            document.getElementById('nextBtn').style.display = (currentPage === pages.length - 1) ? 'none' : 'block';
         }
 
         const pages = [
-            "Hallo Intan...\n\nSebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe.\n\nAku tau hubungan kita sudah berakhir tapi aku tetep mau kasih link ini.",
-            "Aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy (udah tua).",
-            "Aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu.\n\nAku minta maaf juga jarang banget hubungin kamu.\n\nAku minta maaf ketika aku ngomong ada masalah di ingatan kamu.",
-            "Niatnya aku ngasih link pada jam 00:00 cuman kurang tau nih bisa atau engga.\n\nAku juga bingung mau kasih teks seperti apa yaudah kaliye itu aja dari aku.",
+            "Hallo Intan...\n\nSebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe.",
+            "Aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy🎉🎉.",
+            "Aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu.",
+            "Baik baik disana yahh sayang\n mungkin hadiah ini ngga seberapa bagi kamu\ndan juga aku kurang bisa bikin kata kata bagus",
             "Semoga di umur yang baru ini kamu selalu diberikan kebahagiaan, kesehatan, dan semua yang kamu impikan bisa tercapai.",
-            "I love you so much intan septiani basyiroh...\n\n\nI'll be waiting for you ❤️"
+            "I love you so much intan septiani basyiroh...\n\n\nganbatte neeee anataaaaa❤️ から：大切な人"
         ];
 
-        let currentPage = 0;
-        let charIndex = 0;
-        let isTyping = false;
-        let typingTimer;
-        let finaleTriggered = false;
+        let currentPage = 0; let charIndex = 0; let isTyping = false; let typingTimer; let finaleTriggered = false;
 
         function showCake() {
             if(document.getElementById('cakeUI')) return; 
-            
             const cakeHTML = `
                 <div class="cake-container" id="cakeUI">
                     <div class="click-indicator" id="clickArrow">⬇</div>
@@ -489,39 +381,39 @@
             document.getElementById('tiupText').style.animation = 'none';
             document.getElementById('tiupText').style.color = '#fff';
             
-            // Trigger efek Fajar Laut & Foto Polaroid
+            // Fajar Terbit
             document.getElementById('sunrise-bg').classList.add('dawn-active');
             
+            // Memunculkan ke-3 Foto satu per satu (Staggered Animation)
             setTimeout(() => {
-                document.getElementById('polaroid-frame').classList.add('show');
-                launchFinale();
+                document.getElementById('polaroid-1').classList.add('show');
+                
+                setTimeout(() => {
+                    document.getElementById('polaroid-2').classList.add('show');
+                    
+                    setTimeout(() => {
+                        document.getElementById('polaroid-3').classList.add('show');
+                    }, 400); // Foto ketiga muncul
+
+                }, 400); // Foto kedua muncul
+                
+                launchFinale(); // Ledakan klimaks!
             }, 800);
         }
 
         function typeWriter() {
             if (charIndex < pages[currentPage].length) {
                 isTyping = true;
-                // Menambahkan efek Cursor `|` di akhir karakter yang diketik
                 let currentText = pages[currentPage].substring(0, charIndex + 1);
                 document.getElementById("textBox").innerHTML = currentText.replace(/\n/g, '<br>') + '<span class="cursor">&nbsp;</span>';
-                
                 charIndex++;
-                
-                let speed = 45; 
-                if (currentPage === pages.length - 1) {
-                    speed = 180; 
-                }
-
+                let speed = (currentPage === pages.length - 1) ? 180 : 45; 
                 typingTimer = setTimeout(typeWriter, speed);
             } else {
                 isTyping = false;
-                // Pertahankan cursor kedip di akhir kalimat
                 let fullText = pages[currentPage].replace(/\n/g, '<br>');
                 document.getElementById("textBox").innerHTML = fullText + '<span class="cursor">&nbsp;</span>';
-                
-                if (currentPage === pages.length - 1 && !finaleTriggered) {
-                    showCake();
-                }
+                if (currentPage === pages.length - 1 && !finaleTriggered) { showCake(); }
             }
         }
 
@@ -530,176 +422,103 @@
                 clearTimeout(typingTimer);
                 document.getElementById("textBox").innerHTML = pages[currentPage].replace(/\n/g, '<br>') + '<span class="cursor">&nbsp;</span>';
                 isTyping = false;
-                
-                if (currentPage === pages.length - 1 && !finaleTriggered) {
-                    showCake();
-                }
+                if (currentPage === pages.length - 1 && !finaleTriggered) { showCake(); }
             } else {
                 if (currentPage < pages.length - 1) {
-                    currentPage++;
-                    charIndex = 0;
-                    document.getElementById("textBox").innerHTML = "";
-                    updateButtons(); 
-                    typeWriter();
+                    currentPage++; charIndex = 0; document.getElementById("textBox").innerHTML = "";
+                    updateButtons(); typeWriter();
                 }
             }
         }
 
         function turnPrevPage() {
             if (currentPage > 0) {
-                clearTimeout(typingTimer);
-                currentPage--;
-                charIndex = 0;
-                document.getElementById("textBox").innerHTML = "";
-                isTyping = false;
-                finaleTriggered = false; 
+                clearTimeout(typingTimer); currentPage--; charIndex = 0;
+                document.getElementById("textBox").innerHTML = ""; isTyping = false; finaleTriggered = false; 
                 
-                // Sembunyikan fajar & foto jika dia kembali halaman
+                // Reset Fajar & 3 Foto
                 document.getElementById('sunrise-bg').classList.remove('dawn-active');
-                document.getElementById('polaroid-frame').classList.remove('show');
+                document.getElementById('polaroid-1').classList.remove('show');
+                document.getElementById('polaroid-2').classList.remove('show');
+                document.getElementById('polaroid-3').classList.remove('show');
                 
-                updateButtons(); 
-                typeWriter();
+                updateButtons(); typeWriter();
             }
         }
 
         // --- OPTIMASI KEMBANG API ---
         const canvas = document.getElementById('fwCanvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 
-        let particles = [];
-        const gravity = 0.04; 
+        let particles = []; const gravity = 0.04; 
         const colors = ['#ff0043', '#14fc56', '#1e7fff', '#e600ff', '#ffaa00', '#00ffff', '#ffffff'];
 
         class Particle {
             constructor(x, y, color, velocity, isFirework) {
-                this.x = x;
-                this.y = y;
-                this.color = color;
-                this.velocity = velocity;
-                this.isFirework = isFirework; 
-                this.life = 100;
-                this.alpha = 1;
+                this.x = x; this.y = y; this.color = color; this.velocity = velocity;
+                this.isFirework = isFirework; this.life = 100; this.alpha = 1;
             }
-
             draw() {
-                ctx.globalAlpha = this.alpha;
-                ctx.beginPath();
+                ctx.globalAlpha = this.alpha; ctx.beginPath();
                 ctx.arc(this.x, this.y, this.isFirework ? 3 : 2.5, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
+                ctx.fillStyle = this.color; ctx.fill();
             }
-
             update() {
-                this.draw();
-                this.x += this.velocity.x;
-                this.y += this.velocity.y;
-
-                if (this.isFirework) {
-                    this.velocity.y += gravity; 
-                } else {
-                    this.velocity.y += gravity; 
-                    this.velocity.x *= 0.95; 
-                    this.velocity.y *= 0.95;
-                    this.life -= 1.8; 
-                    this.alpha = this.life / 100;
-                }
+                this.draw(); this.x += this.velocity.x; this.y += this.velocity.y;
+                if (this.isFirework) { this.velocity.y += gravity; } 
+                else { this.velocity.y += gravity; this.velocity.x *= 0.95; this.velocity.y *= 0.95; this.life -= 1.8; this.alpha = this.life / 100; }
             }
         }
 
         function createExplosion(x, y) {
             playExplosionSound(); 
             for (let i = 0; i < 30; i++) { 
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 5 + 1;
-                particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
-                    x: Math.cos(angle) * speed,
-                    y: Math.sin(angle) * speed
-                }, false));
+                const angle = Math.random() * Math.PI * 2; const speed = Math.random() * 5 + 1;
+                particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed }, false));
             }
         }
 
         function launchRandomFirework() {
             if(document.hidden) return; 
-
             if(document.getElementById('startScreen').style.display === 'none') {
-                const x = Math.random() * canvas.width;
-                const y = canvas.height;
-                particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
-                    x: (Math.random() - 0.5) * 2.5, 
-                    y: -(Math.random() * 4 + 7) 
-                }, true));
+                const x = Math.random() * canvas.width; const y = canvas.height;
+                particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], { x: (Math.random() - 0.5) * 2.5, y: -(Math.random() * 4 + 7) }, true));
             }
         }
 
         function launchFinale() {
             let count = 0;
             const finaleInterval = setInterval(() => {
-                if(document.hidden) return; 
-                launchRandomFirework();
-                count++;
+                if(document.hidden) return; launchRandomFirework(); count++;
                 if (count > 20) clearInterval(finaleInterval); 
             }, 200);
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
+            ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.globalCompositeOperation = 'lighter';
-
-            if (particles.length > 300) {
-                particles.splice(0, particles.length - 300);
-            }
-
+            if (particles.length > 300) { particles.splice(0, particles.length - 300); }
             for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.update();
-
-                if (p.isFirework && p.velocity.y >= 0) {
-                    createExplosion(p.x, p.y);
-                    particles.splice(i, 1);
-                } 
-                else if (!p.isFirework && p.life <= 0) {
-                    particles.splice(i, 1);
-                }
+                let p = particles[i]; p.update();
+                if (p.isFirework && p.velocity.y >= 0) { createExplosion(p.x, p.y); particles.splice(i, 1); } 
+                else if (!p.isFirework && p.life <= 0) { particles.splice(i, 1); }
             }
         }
 
-        setInterval(launchRandomFirework, 1500); 
-        animate();
+        setInterval(launchRandomFirework, 1500); animate();
 
         window.addEventListener('pointerdown', (e) => {
             if(e.target.tagName === 'BUTTON' || e.target.closest('.text-box') || e.target.id === 'flame') return; 
-
-            const targetX = e.clientX;
-            const targetY = e.clientY;
-            
-            const startX = Math.random() * canvas.width;
-            const startY = canvas.height;
-            
-            const distanceY = startY - targetY;
-            const safeDistanceY = Math.max(distanceY, 10); 
-            
-            const vy = -Math.sqrt(2 * gravity * safeDistanceY); 
-            const t = Math.abs(vy / gravity); 
-            const vx = (targetX - startX) / t; 
-            
-            particles.push(new Particle(startX, startY, colors[Math.floor(Math.random() * colors.length)], {
-                x: vx,
-                y: vy
-            }, true));
+            const targetX = e.clientX; const targetY = e.clientY;
+            const startX = Math.random() * canvas.width; const startY = canvas.height;
+            const distanceY = startY - targetY; const safeDistanceY = Math.max(distanceY, 10); 
+            const vy = -Math.sqrt(2 * gravity * safeDistanceY); const t = Math.abs(vy / gravity); const vx = (targetX - startX) / t; 
+            particles.push(new Particle(startX, startY, colors[Math.floor(Math.random() * colors.length)], { x: vx, y: vy }, true));
         });
 
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
     </script>
 </body>
 </html>
