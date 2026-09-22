@@ -15,13 +15,10 @@
             width: 100vw;
         }
 
-        /* --- PEMANDANGAN FAJAR (SUNRISE) --- */
+        /* --- PEMANDANGAN FAJAR --- */
         #sunrise-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0; 
-            opacity: 0; 
-            transition: opacity 6s ease-in-out;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; opacity: 0; transition: opacity 6s ease-in-out;
         }
         #sunrise-sky {
             position: absolute; top: 0; left: 0; width: 100%; height: 55%;
@@ -30,223 +27,128 @@
         #sunrise-sea {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
             background: linear-gradient(to bottom, #004e92 0%, #000428 100%);
-            z-index: 2;
-            border-top: 1px solid #1a8cff; 
+            z-index: 2; border-top: 1px solid #1a8cff; 
         }
         .sun {
-            position: absolute;
-            bottom: 35%; 
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 120px;
-            background: #ffdf00;
-            border-radius: 50%;
-            box-shadow: 0 0 60px #ff9900;
-            transition: bottom 6s ease-in-out;
-            z-index: 1; 
+            position: absolute; bottom: 35%; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 120px; background: #ffdf00;
+            border-radius: 50%; box-shadow: 0 0 60px #ff9900;
+            transition: bottom 6s ease-in-out; z-index: 1; 
         }
         #sunrise-bg.dawn-active { opacity: 1; }
         #sunrise-bg.dawn-active .sun { bottom: 48%; }
 
+        /* --- START SCREEN --- */
         #startScreen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            z-index: 50;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 50; display: flex;
+            justify-content: center; align-items: center; flex-direction: column;
         }
-        
         #startScreen button {
-            padding: 15px 40px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            background: transparent;
-            color: #fff;
-            border: 2px solid #fff;
-            border-radius: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: 0.3s;
-            box-shadow: 0 0 10px rgba(255,255,255,0.2);
+            padding: 15px 40px; font-size: 1.5rem; cursor: pointer;
+            background: transparent; color: #fff; border: 2px solid #fff;
+            border-radius: 10px; text-transform: uppercase; letter-spacing: 2px;
+            transition: 0.3s; box-shadow: 0 0 10px rgba(255,255,255,0.2);
         }
+        #startScreen button:hover { background: #fff; color: #000; box-shadow: 0 0 30px rgba(255,255,255,0.8); }
 
-        #startScreen button:hover {
-            background: #fff;
-            color: #000;
-            box-shadow: 0 0 30px rgba(255,255,255,0.8);
-        }
-
-        canvas {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1; 
-        }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 
         #vn-container {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none; 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10; display: flex; justify-content: center; align-items: center; pointer-events: none; 
         }
 
         .text-box {
-            width: 80%;
-            max-width: 900px;
-            min-height: 250px;
-            background: rgba(0, 0, 0, 0.7); 
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.9);
-            font-size: 1.6rem;
-            line-height: 1.8;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            pointer-events: auto; 
-            transition: all 0.5s;
-            position: relative;
+            width: 80%; max-width: 900px; min-height: 250px;
+            background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px; border-radius: 15px; box-shadow: 0 0 40px rgba(0,0,0,0.9);
+            font-size: 1.6rem; line-height: 1.8; text-align: center;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column; pointer-events: auto; transition: all 0.5s; position: relative;
         }
 
         .cursor {
-            display: inline-block;
-            width: 12px;
-            background-color: #fff;
-            animation: blink 0.8s infinite;
-            margin-left: 2px;
-            vertical-align: baseline;
+            display: inline-block; width: 12px; background-color: #fff;
+            animation: blink 0.8s infinite; margin-left: 2px; vertical-align: baseline;
         }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* --- 3 FOTO POLAROID BESAR BERTEBARAN & SALING TUMPUK --- */
+        /* --- 10 FOTO POLAROID TUMPUK MENYEBAR --- */
         .polaroid {
-            position: absolute;
-            background: #fff;
-            padding: 12px 12px 45px 12px; /* Bingkai ala polaroid diperbesar */
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-            opacity: 0;
-            pointer-events: none;
-            transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+            position: absolute; background: #fff; padding: 10px 10px 35px 10px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7); opacity: 0; pointer-events: none;
+            transition: all 1s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer;
         }
         .polaroid img {
-            width: 220px;  /* Ukuran Foto Diperbesar */
-            height: 220px;
-            object-fit: cover;
-            filter: grayscale(100%); 
+            width: 150px; height: 150px; object-fit: cover;
+            filter: grayscale(100%); transition: filter 0.3s;
         }
         
-        /* Posisi awal (agak ke bawah) dan Z-index diatur agar saling tumpuk */
-        .p1 { top: 60%; left: 35%; transform: translate(-50%, 50px) rotate(-20deg); z-index: 20; }
-        .p2 { top: 60%; left: 50%; transform: translate(-50%, 50px) rotate(0deg); z-index: 21; }
-        .p3 { top: 60%; left: 65%; transform: translate(-50%, 50px) rotate(20deg); z-index: 22; }
+        /* Efek saat polaroid disentuh (maju ke depan & berwarna) */
+        .polaroid.show { pointer-events: auto; }
+        .polaroid.show:hover {
+            z-index: 40 !important;
+            transform: translate(-50%, -50%) scale(1.15) rotate(0deg) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+        }
+        .polaroid.show:hover img { filter: grayscale(0%); }
 
-        /* Posisi akhir (Tepat menumpuk teks di tengah) */
-        .p1.show { opacity: 1; transform: translate(-50%, -50%) rotate(-12deg); top: 38%; }
-        .p2.show { opacity: 1; transform: translate(-50%, -50%) rotate(4deg); top: 40%; }
-        .p3.show { opacity: 1; transform: translate(-50%, -50%) rotate(18deg); top: 38%; }
+        /* Posisi Start (Tersembunyi di tengah) */
+        .p1, .p2, .p3, .p4, .p5, .p6, .p7, .p8, .p9, .p10 {
+            top: 70%; left: 50%; transform: translate(-50%, 50px) rotate(0deg); z-index: 15;
+        }
+
+        /* Posisi Akhir (Menyebar secara estetik menutupi teks) */
+        .p1.show { opacity: 1; top: 25%; left: 25%; transform: translate(-50%, -50%) rotate(-15deg); z-index: 21; }
+        .p2.show { opacity: 1; top: 20%; left: 50%; transform: translate(-50%, -50%) rotate(8deg); z-index: 22; }
+        .p3.show { opacity: 1; top: 30%; left: 75%; transform: translate(-50%, -50%) rotate(-5deg); z-index: 23; }
+        .p4.show { opacity: 1; top: 50%; left: 20%; transform: translate(-50%, -50%) rotate(18deg); z-index: 24; }
+        .p5.show { opacity: 1; top: 40%; left: 40%; transform: translate(-50%, -50%) rotate(-12deg); z-index: 25; }
+        .p6.show { opacity: 1; top: 45%; left: 60%; transform: translate(-50%, -50%) rotate(14deg); z-index: 26; }
+        .p7.show { opacity: 1; top: 55%; left: 80%; transform: translate(-50%, -50%) rotate(-20deg); z-index: 27; }
+        .p8.show { opacity: 1; top: 75%; left: 35%; transform: translate(-50%, -50%) rotate(5deg); z-index: 28; }
+        .p9.show { opacity: 1; top: 65%; left: 65%; transform: translate(-50%, -50%) rotate(-8deg); z-index: 29; }
+        .p10.show { opacity: 1; top: 60%; left: 50%; transform: translate(-50%, -50%) rotate(2deg); z-index: 30; }
+
+        /* --- MODAL ZOOM FOTO --- */
+        #photoModal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.9); z-index: 9999; display: none;
+            justify-content: center; align-items: center; flex-direction: column;
+            opacity: 0; transition: opacity 0.3s ease; cursor: pointer;
+        }
+        #photoModal.active { opacity: 1; }
+        #photoModal img {
+            max-width: 90%; max-height: 80vh; border: 15px solid #fff; border-bottom-width: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8); transform: scale(0.8); transition: transform 0.3s ease;
+        }
+        #photoModal.active img { transform: scale(1); }
+        .close-modal { margin-top: 20px; color: #fff; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; }
 
         .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: transparent;
-            color: rgba(255, 255, 255, 0.3);
-            border: none;
-            font-size: 4rem;
-            cursor: pointer;
-            pointer-events: auto; 
-            transition: 0.3s ease;
-            padding: 20px;
-            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+            position: absolute; top: 50%; transform: translateY(-50%); background: transparent;
+            color: rgba(255, 255, 255, 0.3); border: none; font-size: 4rem; cursor: pointer;
+            pointer-events: auto; transition: 0.3s ease; padding: 20px; text-shadow: 0 0 10px rgba(255,255,255,0.1);
         }
-        
         .nav-btn:hover { color: #fff; text-shadow: 0 0 25px #fff; }
-        .left-btn { left: 30px; }
-        .right-btn { right: 30px; }
-
+        .left-btn { left: 30px; } .right-btn { right: 30px; }
         #player { display: none; }
 
         /* --- CSS KUE STRAWBERRY --- */
-        .cake-container {
-            margin-top: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: fadeIn 1s forwards;
-            position: relative;
-        }
-        
-        .click-indicator {
-            position: absolute;
-            top: -75px; left: 50%;
-            transform: translateX(-50%);
-            color: #ffaa00; font-size: 2.5rem;
-            animation: bounceArrow 1s infinite;
-            pointer-events: none; z-index: 5;
-            text-shadow: 0 0 15px #ff0043;
-        }
-
+        .cake-container { margin-top: 40px; display: flex; flex-direction: column; align-items: center; animation: fadeIn 1s forwards; position: relative; }
+        .click-indicator { position: absolute; top: -75px; left: 50%; transform: translateX(-50%); color: #ffaa00; font-size: 2.5rem; animation: bounceArrow 1s infinite; pointer-events: none; z-index: 5; text-shadow: 0 0 15px #ff0043; }
         .cake-wrapper { position: relative; width: 150px; display: flex; flex-direction: column; align-items: center; }
-        
-        .cake-flame {
-            position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
-            width: 16px; height: 24px; background: #ffaa00;
-            border-radius: 50% 50% 20% 20%;
-            box-shadow: 0 0 15px #ffaa00, 0 0 30px #ff0043;
-            cursor: pointer; animation: flicker 0.1s infinite alternate; z-index: 25; transition: 0.3s;
-        }
+        .cake-flame { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 16px; height: 24px; background: #ffaa00; border-radius: 50% 50% 20% 20%; box-shadow: 0 0 15px #ffaa00, 0 0 30px #ff0043; cursor: pointer; animation: flicker 0.1s infinite alternate; z-index: 45; transition: 0.3s; }
         .cake-flame:hover { transform: translateX(-50%) scale(1.2); }
-        
-        .cake-smoke {
-            position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
-            width: 10px; height: 10px; background: #ccc; border-radius: 50%; opacity: 0; z-index: 5;
-        }
+        .cake-smoke { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 10px; height: 10px; background: #ccc; border-radius: 50%; opacity: 0; z-index: 5; }
         .cake-smoke.puff { animation: blowOutSmoke 1.5s forwards; }
-        
-        .cake-candle {
-            width: 12px; height: 40px;
-            background: repeating-linear-gradient(45deg, #fff, #fff 4px, #ff4d4d 4px, #ff4d4d 8px);
-            margin: 0 auto; border-radius: 3px; position: relative; z-index: 2;
-        }
-
-        /* Krim Strawberry Pink */
-        .cake-frosting {
-            position: absolute; width: 140px; height: 35px; background: #ffcce6;
-            border-radius: 20px; top: 30px; z-index: 3; box-shadow: 0 5px 5px rgba(0,0,0,0.3);
-        }
-
-        /* Buah Strawberry Merah */
-        .berry {
-            position: absolute; width: 18px; height: 20px;
-            background: radial-gradient(circle at 30% 30%, #ff6666, #b30000);
-            border-radius: 50% 50% 40% 40%; z-index: 4; box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-        }
+        .cake-candle { width: 12px; height: 40px; background: repeating-linear-gradient(45deg, #fff, #fff 4px, #ff4d4d 4px, #ff4d4d 8px); margin: 0 auto; border-radius: 3px; position: relative; z-index: 2; }
+        .cake-frosting { position: absolute; width: 140px; height: 35px; background: #ffcce6; border-radius: 20px; top: 30px; z-index: 3; box-shadow: 0 5px 5px rgba(0,0,0,0.3); }
+        .berry { position: absolute; width: 18px; height: 20px; background: radial-gradient(circle at 30% 30%, #ff6666, #b30000); border-radius: 50% 50% 40% 40%; z-index: 4; box-shadow: 2px 2px 4px rgba(0,0,0,0.4); }
         .berry1 { left: 20px; top: 25px; } .berry2 { left: 65px; top: 20px; } .berry3 { right: 20px; top: 28px; }
-        
-        /* Badan Kue Gradien Pink */
-        .cake-body {
-            width: 124px; height: 60px;
-            background: linear-gradient(to right, #d85c8a, #ff7eb3, #d85c8a);
-            border-radius: 5px 5px 8px 8px; position: relative; z-index: 1;
-            margin-top: -15px; box-shadow: inset 0 -10px 15px rgba(0,0,0,0.4);
-        }
-        
-        .tiup-text {
-            margin-top: 25px; font-size: 1.1rem; color: #ffaa00; font-weight: bold;
-            animation: pulse 1.5s infinite; letter-spacing: 1px; z-index: 25; position: relative;
-        }
+        .cake-body { width: 124px; height: 60px; background: linear-gradient(to right, #d85c8a, #ff7eb3, #d85c8a); border-radius: 5px 5px 8px 8px; position: relative; z-index: 1; margin-top: -15px; box-shadow: inset 0 -10px 15px rgba(0,0,0,0.4); }
+        .tiup-text { margin-top: 25px; font-size: 1.1rem; color: #ffaa00; font-weight: bold; animation: pulse 1.5s infinite; letter-spacing: 1px; z-index: 45; position: relative; }
 
         @keyframes bounceArrow { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -15px); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -265,6 +167,12 @@
         <div id="sunrise-sea"></div>
     </div>
 
+    <!-- MODAL FOTO ZOOM -->
+    <div id="photoModal" onclick="closePhoto()">
+        <img id="enlargedImg" src="" alt="Zoom Memory">
+        <div class="close-modal">(Klik dimana saja untuk tutup)</div>
+    </div>
+
     <div id="startScreen">
         <button onclick="startApp()">Buka Pesan</button>
     </div>
@@ -275,10 +183,17 @@
         <button class="nav-btn left-btn" id="prevBtn" onclick="turnPrevPage()">&#10094;</button>
         <div class="text-box" id="textBoxBox">
             
-            <!-- 3 FOTO POLAROID TUMPUK -->
-            <div class="polaroid p1" id="polaroid-1"><img src="foto1.jpg" alt="Memory 1"></div>
-            <div class="polaroid p2" id="polaroid-2"><img src="foto2.jpg" alt="Memory 2"></div>
-            <div class="polaroid p3" id="polaroid-3"><img src="foto3.jpg" alt="Memory 3"></div>
+            <!-- 10 FOTO POLAROID -->
+            <div class="polaroid p1" id="polaroid-1" onclick="openPhoto('foto1.jpg')"><img src="foto1.jpg"></div>
+            <div class="polaroid p2" id="polaroid-2" onclick="openPhoto('foto2.jpg')"><img src="foto2.jpg"></div>
+            <div class="polaroid p3" id="polaroid-3" onclick="openPhoto('foto3.jpg')"><img src="foto3.jpg"></div>
+            <div class="polaroid p4" id="polaroid-4" onclick="openPhoto('foto4.jpg')"><img src="foto4.jpg"></div>
+            <div class="polaroid p5" id="polaroid-5" onclick="openPhoto('foto5.jpg')"><img src="foto5.jpg"></div>
+            <div class="polaroid p6" id="polaroid-6" onclick="openPhoto('foto6.jpg')"><img src="foto6.jpg"></div>
+            <div class="polaroid p7" id="polaroid-7" onclick="openPhoto('foto7.jpg')"><img src="foto7.jpg"></div>
+            <div class="polaroid p8" id="polaroid-8" onclick="openPhoto('foto8.jpg')"><img src="foto8.jpg"></div>
+            <div class="polaroid p9" id="polaroid-9" onclick="openPhoto('foto9.jpg')"><img src="foto9.jpg"></div>
+            <div class="polaroid p10" id="polaroid-10" onclick="openPhoto('foto10.jpg')"><img src="foto10.jpg"></div>
             
             <div id="textBox"></div>
         </div>
@@ -292,32 +207,37 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '0',
-                width: '0',
-                videoId: 'W-NLEEyycao', 
+                height: '0', width: '0', videoId: 'W-NLEEyycao', 
                 playerVars: { 'autoplay': 0, 'loop': 1, 'controls': 0 }
             });
+        }
+
+        // FUNGSI ZOOM FOTO (LIGHTBOX)
+        function openPhoto(src) {
+            document.getElementById('enlargedImg').src = src;
+            const modal = document.getElementById('photoModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+        }
+
+        function closePhoto() {
+            const modal = document.getElementById('photoModal');
+            modal.classList.remove('active');
+            setTimeout(() => modal.style.display = 'none', 300);
         }
 
         function playExplosionSound() {
             if (!audioCtx) return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            
             const bufferSize = audioCtx.sampleRate * 0.5; 
             const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const data = buffer.getChannelData(0);
             for (let i = 0; i < bufferSize; i++) { data[i] = Math.random() * 2 - 1; }
-            
-            const noise = audioCtx.createBufferSource();
-            noise.buffer = buffer;
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass'; filter.frequency.setValueAtTime(800, audioCtx.currentTime);
+            const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
+            const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.setValueAtTime(800, audioCtx.currentTime);
             filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
-            
-            const gainNode = audioCtx.createGain();
-            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime); 
+            const gainNode = audioCtx.createGain(); gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime); 
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-            
             noise.connect(filter); filter.connect(gainNode); gainNode.connect(audioCtx.destination);
             noise.start();
         }
@@ -382,17 +302,17 @@
             // Fajar Terbit
             document.getElementById('sunrise-bg').classList.add('dawn-active');
             
-            // Memunculkan ke-3 Foto satu per satu yang menumpuk di teks
-            setTimeout(() => {
-                document.getElementById('polaroid-1').classList.add('show');
+            // Memunculkan 10 Foto bergantian secara dramatis
+            let photoDelay = 800;
+            for(let i = 1; i <= 10; i++) {
                 setTimeout(() => {
-                    document.getElementById('polaroid-2').classList.add('show');
-                    setTimeout(() => {
-                        document.getElementById('polaroid-3').classList.add('show');
-                    }, 400); 
-                }, 400); 
-                launchFinale(); 
-            }, 800);
+                    let photo = document.getElementById('polaroid-' + i);
+                    if(photo) photo.classList.add('show');
+                }, photoDelay);
+                photoDelay += 200; // Jeda 0.2 detik antar foto
+            }
+
+            setTimeout(() => { launchFinale(); }, 1500);
         }
 
         function typeWriter() {
@@ -431,9 +351,10 @@
                 document.getElementById("textBox").innerHTML = ""; isTyping = false; finaleTriggered = false; 
                 
                 document.getElementById('sunrise-bg').classList.remove('dawn-active');
-                document.getElementById('polaroid-1').classList.remove('show');
-                document.getElementById('polaroid-2').classList.remove('show');
-                document.getElementById('polaroid-3').classList.remove('show');
+                for(let i=1; i<=10; i++){
+                    let p = document.getElementById('polaroid-' + i);
+                    if(p) p.classList.remove('show');
+                }
                 
                 updateButtons(); typeWriter();
             }
@@ -489,7 +410,8 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalCompositeOperation = 'destination-out'; 
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.globalCompositeOperation = 'lighter';
             if (particles.length > 300) { particles.splice(0, particles.length - 300); }
             for (let i = particles.length - 1; i >= 0; i--) {
@@ -502,7 +424,8 @@
         setInterval(launchRandomFirework, 1500); animate();
 
         window.addEventListener('pointerdown', (e) => {
-            if(e.target.tagName === 'BUTTON' || e.target.closest('.text-box') || e.target.id === 'flame') return; 
+            // Cegah tembak kembang api kalau nge-klik modal, foto, tombol, atau lilin
+            if(e.target.tagName === 'BUTTON' || e.target.closest('.text-box') || e.target.id === 'flame' || e.target.closest('#photoModal')) return; 
             const targetX = e.clientX; const targetY = e.clientY;
             const startX = Math.random() * canvas.width; const startY = canvas.height;
             const distanceY = startY - targetY; const safeDistanceY = Math.max(distanceY, 10); 
