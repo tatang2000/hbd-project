@@ -15,7 +15,21 @@
             width: 100vw;
         }
 
-        /* --- PEMANDANGAN FAJAR --- */
+        /* --- BINTANG DI LANGIT --- */
+        #stars-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+        .star {
+            position: absolute; background: #fff; border-radius: 50%;
+            animation: twinkle infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* --- PEMANDANGAN FAJAR (SUNRISE & LAUT BERGERAK) --- */
         #sunrise-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0; opacity: 0; transition: opacity 6s ease-in-out;
@@ -24,11 +38,24 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 55%;
             background: linear-gradient(to bottom, #0b0d17 0%, #4a154b 50%, #ff7a59 100%);
         }
+        
+        /* Air Laut dengan Animasi Ripple/Ombak Tipis */
         #sunrise-sea {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
             background: linear-gradient(to bottom, #004e92 0%, #000428 100%);
-            z-index: 2; border-top: 1px solid #1a8cff; 
+            z-index: 2; border-top: 1px solid #1a8cff; overflow: hidden;
         }
+        #sunrise-sea::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, transparent 60%);
+            background-size: 120px 15px; background-repeat: repeat;
+            animation: waveMotion 4s linear infinite; opacity: 0.6;
+        }
+        @keyframes waveMotion {
+            0% { background-position: 0px 0px; }
+            100% { background-position: 120px 0px; }
+        }
+
         .sun {
             position: absolute; bottom: 35%; left: 50%; transform: translateX(-50%);
             width: 120px; height: 120px; background: #ffdf00;
@@ -85,7 +112,6 @@
             filter: grayscale(100%); transition: filter 0.3s;
         }
         
-        /* Efek saat polaroid disentuh (maju ke depan & berwarna) */
         .polaroid.show { pointer-events: auto; }
         .polaroid.show:hover {
             z-index: 40 !important;
@@ -94,12 +120,10 @@
         }
         .polaroid.show:hover img { filter: grayscale(0%); }
 
-        /* Posisi Start (Tersembunyi di tengah) */
         .p1, .p2, .p3, .p4, .p5, .p6, .p7, .p8, .p9, .p10 {
             top: 70%; left: 50%; transform: translate(-50%, 50px) rotate(0deg); z-index: 15;
         }
 
-        /* Posisi Akhir (Menyebar secara estetik menutupi teks) */
         .p1.show { opacity: 1; top: 25%; left: 25%; transform: translate(-50%, -50%) rotate(-15deg); z-index: 21; }
         .p2.show { opacity: 1; top: 20%; left: 50%; transform: translate(-50%, -50%) rotate(8deg); z-index: 22; }
         .p3.show { opacity: 1; top: 30%; left: 75%; transform: translate(-50%, -50%) rotate(-5deg); z-index: 23; }
@@ -161,6 +185,10 @@
 
     <div id="player"></div>
 
+    <!-- BINTANG-BINTANG DI LANGIT -->
+    <div id="stars-container"></div>
+
+    <!-- BACKGROUND FAJAR LAUT & LANGIT -->
     <div id="sunrise-bg">
         <div id="sunrise-sky"></div>
         <div class="sun"></div>
@@ -173,12 +201,15 @@
         <div class="close-modal">(Klik dimana saja untuk tutup)</div>
     </div>
 
+    <!-- START SCREEN -->
     <div id="startScreen">
         <button onclick="startApp()">Buka Pesan</button>
     </div>
 
+    <!-- KANVAS PETASAN -->
     <canvas id="fwCanvas"></canvas>
 
+    <!-- UI VISUAL NOVEL -->
     <div id="vn-container" style="display: none;">
         <button class="nav-btn left-btn" id="prevBtn" onclick="turnPrevPage()">&#10094;</button>
         <div class="text-box" id="textBoxBox">
@@ -202,6 +233,21 @@
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
+        // GENERATE BINTANG SECARA ACAK
+        const starsContainer = document.getElementById('stars-container');
+        for(let i = 0; i < 150; i++) {
+            let star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            let size = Math.random() * 2.5;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            starsContainer.appendChild(star);
+        }
+
         var player;
         var audioCtx;
 
@@ -212,7 +258,6 @@
             });
         }
 
-        // FUNGSI ZOOM FOTO (LIGHTBOX)
         function openPhoto(src) {
             document.getElementById('enlargedImg').src = src;
             const modal = document.getElementById('photoModal');
@@ -256,12 +301,12 @@
         }
 
         const pages = [
-            "Hallo Intan...\n\nSebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe.",
-            "Aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy🎉🎉.",
-            "Aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu.",
-            "Baik baik disana yahh sayang\n mungkin hadiah ini ngga seberapa bagi kamu\ndan juga aku kurang bisa bikin kata kata bagus",
+            "Hallo Intan...\n\nSebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe.\n\nAku tau hubungan kita sudah berakhir tapi aku tetep mau kasih link ini.",
+            "Aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy (udah tua).",
+            "Aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu.\n\nAku minta maaf juga jarang banget hubungin kamu.\n\nAku minta maaf ketika aku ngomong ada masalah di ingatan kamu.",
+            "Niatnya aku ngasih link pada jam 00:00 cuman kurang tau nih bisa atau engga.\n\nAku juga bingung mau kasih teks seperti apa yaudah kaliye itu aja dari aku.",
             "Semoga di umur yang baru ini kamu selalu diberikan kebahagiaan, kesehatan, dan semua yang kamu impikan bisa tercapai.",
-            "I love you so much intan septiani basyiroh...\n\n\nganbatte neeee anataaaaa❤️ から：大切な人"
+            "I love you so much intan septiani basyiroh...\n\n\nI'll be waiting for you ❤️"
         ];
 
         let currentPage = 0; let charIndex = 0; let isTyping = false; let typingTimer; let finaleTriggered = false;
@@ -295,21 +340,20 @@
             document.getElementById('flame').style.display = 'none';
             document.getElementById('smoke').classList.add('puff');
             
-            document.getElementById('tiupText').innerHTML = "Yeayyy! Happy Birthday Intan! 🎉";
+            document.getElementById('tiupText').innerHTML = "Yeayyy! Happy Birthday! 🎉";
             document.getElementById('tiupText').style.animation = 'none';
             document.getElementById('tiupText').style.color = '#fff';
             
-            // Fajar Terbit
+            // Saat fajar aktif, bintang otomatis akan memudar tertutup warna gradient #sunrise-bg
             document.getElementById('sunrise-bg').classList.add('dawn-active');
             
-            // Memunculkan 10 Foto bergantian secara dramatis
             let photoDelay = 800;
             for(let i = 1; i <= 10; i++) {
                 setTimeout(() => {
                     let photo = document.getElementById('polaroid-' + i);
                     if(photo) photo.classList.add('show');
                 }, photoDelay);
-                photoDelay += 200; // Jeda 0.2 detik antar foto
+                photoDelay += 200; 
             }
 
             setTimeout(() => { launchFinale(); }, 1500);
@@ -424,7 +468,6 @@
         setInterval(launchRandomFirework, 1500); animate();
 
         window.addEventListener('pointerdown', (e) => {
-            // Cegah tembak kembang api kalau nge-klik modal, foto, tombol, atau lilin
             if(e.target.tagName === 'BUTTON' || e.target.closest('.text-box') || e.target.id === 'flame' || e.target.closest('#photoModal')) return; 
             const targetX = e.clientX; const targetY = e.clientY;
             const startX = Math.random() * canvas.width; const startY = canvas.height;
