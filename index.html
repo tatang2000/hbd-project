@@ -15,6 +15,44 @@
             width: 100vw;
         }
 
+        /* --- PEMANDANGAN FAJAR (SUNRISE BACKGROUND) --- */
+        #sunrise-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; /* Paling belakang */
+            opacity: 0; /* Tersembunyi di awal */
+            transition: opacity 6s ease-in-out;
+        }
+        #sunrise-sky {
+            position: absolute; top: 0; left: 0; width: 100%; height: 55%;
+            background: linear-gradient(to bottom, #0b0d17 0%, #4a154b 50%, #ff7a59 100%);
+        }
+        #sunrise-sea {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
+            background: linear-gradient(to bottom, #004e92 0%, #000428 100%);
+            z-index: 2;
+            border-top: 1px solid #1a8cff; /* Garis horizon laut */
+        }
+        .sun {
+            position: absolute;
+            bottom: 35%; /* Bersembunyi di balik laut */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            background: #ffdf00;
+            border-radius: 50%;
+            box-shadow: 0 0 60px #ff9900;
+            transition: bottom 6s ease-in-out;
+            z-index: 1; /* Di antara langit dan laut */
+        }
+        #sunrise-bg.dawn-active {
+            opacity: 1;
+        }
+        #sunrise-bg.dawn-active .sun {
+            bottom: 48%; /* Matahari terbit ke atas cakrawala */
+        }
+
         #startScreen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -80,6 +118,46 @@
             flex-direction: column;
             pointer-events: auto; 
             transition: all 0.5s;
+            position: relative;
+        }
+
+        /* --- KURSOR MENGETIK BERKEDIP --- */
+        .cursor {
+            display: inline-block;
+            width: 12px;
+            background-color: #fff;
+            animation: blink 0.8s infinite;
+            margin-left: 2px;
+            vertical-align: baseline;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* --- FOTO POLAROID TERSEMBUNYI --- */
+        .polaroid {
+            position: absolute;
+            top: -50px; /* Muncul sedikit menyembul dari kotak teks */
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px) rotate(-3deg);
+            background: #fff;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+            opacity: 0;
+            z-index: 20;
+            pointer-events: none;
+            transition: all 2s ease-in-out;
+        }
+        .polaroid img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            filter: grayscale(100%); /* Efek monokrom hitam putih */
+        }
+        .polaroid.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) rotate(-3deg);
         }
 
         .nav-btn {
@@ -107,7 +185,7 @@
 
         #player { display: none; }
 
-        /* --- CSS KUE BLUEBERRY --- */
+        /* --- CSS KUE STRAWBERRY --- */
         .cake-container {
             margin-top: 40px;
             display: flex;
@@ -178,13 +256,7 @@
         .cake-candle {
             width: 12px;
             height: 40px;
-            background: repeating-linear-gradient(
-                45deg,
-                #fff,
-                #fff 4px,
-                #ff4d4d 4px,
-                #ff4d4d 8px
-            );
+            background: repeating-linear-gradient(45deg, #fff, #fff 4px, #ff4d4d 4px, #ff4d4d 8px);
             margin: 0 auto;
             border-radius: 3px;
             position: relative;
@@ -195,7 +267,7 @@
             position: absolute;
             width: 140px;
             height: 35px;
-            background: #ffcce6; 
+            background: #ffcce6; /* Pink Muda */
             border-radius: 20px;
             top: 30px; 
             z-index: 3;
@@ -204,8 +276,8 @@
 
         .berry {
             position: absolute;
-            width: 16px; height: 16px;
-            background: radial-gradient(circle at 30% 30%, #ff6666, #b30000);
+            width: 18px; height: 20px;
+            background: radial-gradient(circle at 30% 30%, #ff6666, #b30000); /* Strawberry Merah */
             border-radius: 50% 50% 40% 40%;
             z-index: 4;
             box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
@@ -217,12 +289,12 @@
         .cake-body {
             width: 124px;
             height: 60px;
-            background: linear-gradient(to right, #d85c8a, #ff7eb3, #d85c8a);
+            background: linear-gradient(to right, #d85c8a, #ff7eb3, #d85c8a); /* Gradien Pink */
             border-radius: 5px 5px 8px 8px;
             position: relative;
             z-index: 1;
             margin-top: -15px; 
-            box-shadow: inset 0 -10px 15px rgba(0,0,0,0.6);
+            box-shadow: inset 0 -10px 15px rgba(0,0,0,0.4);
         }
         
         .tiup-text {
@@ -234,7 +306,6 @@
             letter-spacing: 1px;
         }
 
-        /* ANIMASI */
         @keyframes bounceArrow {
             0%, 100% { transform: translate(-50%, 0); }
             50% { transform: translate(-50%, -15px); }
@@ -259,17 +330,36 @@
 </head>
 <body>
 
+    <!-- YOUTUBE PLAYER -->
     <div id="player"></div>
 
+    <!-- BACKGROUND FAJAR LAUT & LANGIT -->
+    <div id="sunrise-bg">
+        <div id="sunrise-sky"></div>
+        <div class="sun"></div>
+        <div id="sunrise-sea"></div>
+    </div>
+
+    <!-- START SCREEN -->
     <div id="startScreen">
         <button onclick="startApp()">Buka Pesan</button>
     </div>
 
+    <!-- KANVAS PETASAN -->
     <canvas id="fwCanvas"></canvas>
 
+    <!-- UI VISUAL NOVEL -->
     <div id="vn-container" style="display: none;">
         <button class="nav-btn left-btn" id="prevBtn" onclick="turnPrevPage()">&#10094;</button>
-        <div class="text-box" id="textBox"></div>
+        <div class="text-box" id="textBoxBox">
+            <!-- FOTO POLAROID -->
+            <div class="polaroid" id="polaroid-frame">
+                <!-- NAMA FILE FOTO KAMU (foto.jpg) DIPANGGIL DI SINI -->
+                <img src="foto.jpg" alt="Memory">
+            </div>
+            
+            <div id="textBox"></div>
+        </div>
         <button class="nav-btn right-btn" id="nextBtn" onclick="turnNextPage()">&#10095;</button>
     </div>
 
@@ -282,7 +372,7 @@
             player = new YT.Player('player', {
                 height: '0',
                 width: '0',
-                videoId: 'W-NLEEyycao', // UPDATE LAGU BARU DI SINI
+                videoId: 'W-NLEEyycao', 
                 playerVars: {
                     'autoplay': 0,
                     'loop': 1,
@@ -291,7 +381,6 @@
             });
         }
 
-        // FUNGSI SUARA LEDAKAN PETASAN
         function playExplosionSound() {
             if (!audioCtx) return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -313,7 +402,6 @@
             filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
             
             const gainNode = audioCtx.createGain();
-            // VOLUME LEDAKAN SEDIKIT DITAMBAH (0.06) AGAR LEBIH TERDENGAR
             gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime); 
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
             
@@ -353,12 +441,12 @@
         }
 
         const pages = [
-            "Hallo Intan...\n\nSebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe.",
-            "Aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy🎉🎉.",
-            "Aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu.",
-            "Baik baik disana yahh sayang\n mungkin hadiah ini ngga seberapa bagi kamu\ndan juga aku kurang bisa bikin kata kata bagus",
+            "Hallo Intan...\n\nSebenernya aku mau kasih surprise tapi kamu udah tau ya mengenai project ini hehe.\n\nAku tau hubungan kita sudah berakhir tapi aku tetep mau kasih link ini.",
+            "Aku disini mau meminta maaf sekaligus merayakan ulang tahun kamu yang ke-20 yeeayyy (udah tua).",
+            "Aku minta maaf jika selama ini dirasa larangan ku memang begitu mengekang kamu.\n\nAku minta maaf juga jarang banget hubungin kamu.\n\nAku minta maaf ketika aku ngomong ada masalah di ingatan kamu.",
+            "Niatnya aku ngasih link pada jam 00:00 cuman kurang tau nih bisa atau engga.\n\nAku juga bingung mau kasih teks seperti apa yaudah kaliye itu aja dari aku.",
             "Semoga di umur yang baru ini kamu selalu diberikan kebahagiaan, kesehatan, dan semua yang kamu impikan bisa tercapai.",
-            "I love you so much intan septiani basyiroh...\n\n\nganbatte neeee anataaaaa❤️ から：大切な人"
+            "I love you so much intan septiani basyiroh...\n\n\nI'll be waiting for you ❤️"
         ];
 
         let currentPage = 0;
@@ -401,7 +489,11 @@
             document.getElementById('tiupText').style.animation = 'none';
             document.getElementById('tiupText').style.color = '#fff';
             
+            // Trigger efek Fajar Laut & Foto Polaroid
+            document.getElementById('sunrise-bg').classList.add('dawn-active');
+            
             setTimeout(() => {
+                document.getElementById('polaroid-frame').classList.add('show');
                 launchFinale();
             }, 800);
         }
@@ -409,13 +501,9 @@
         function typeWriter() {
             if (charIndex < pages[currentPage].length) {
                 isTyping = true;
-                let char = pages[currentPage].charAt(charIndex);
-                
-                if (char === '\n') {
-                    document.getElementById("textBox").innerHTML += "<br>";
-                } else {
-                    document.getElementById("textBox").innerHTML += char;
-                }
+                // Menambahkan efek Cursor `|` di akhir karakter yang diketik
+                let currentText = pages[currentPage].substring(0, charIndex + 1);
+                document.getElementById("textBox").innerHTML = currentText.replace(/\n/g, '<br>') + '<span class="cursor">&nbsp;</span>';
                 
                 charIndex++;
                 
@@ -427,6 +515,10 @@
                 typingTimer = setTimeout(typeWriter, speed);
             } else {
                 isTyping = false;
+                // Pertahankan cursor kedip di akhir kalimat
+                let fullText = pages[currentPage].replace(/\n/g, '<br>');
+                document.getElementById("textBox").innerHTML = fullText + '<span class="cursor">&nbsp;</span>';
+                
                 if (currentPage === pages.length - 1 && !finaleTriggered) {
                     showCake();
                 }
@@ -436,7 +528,7 @@
         function turnNextPage() {
             if (isTyping) {
                 clearTimeout(typingTimer);
-                document.getElementById("textBox").innerHTML = pages[currentPage].replace(/\n/g, '<br>');
+                document.getElementById("textBox").innerHTML = pages[currentPage].replace(/\n/g, '<br>') + '<span class="cursor">&nbsp;</span>';
                 isTyping = false;
                 
                 if (currentPage === pages.length - 1 && !finaleTriggered) {
@@ -461,6 +553,11 @@
                 document.getElementById("textBox").innerHTML = "";
                 isTyping = false;
                 finaleTriggered = false; 
+                
+                // Sembunyikan fajar & foto jika dia kembali halaman
+                document.getElementById('sunrise-bg').classList.remove('dawn-active');
+                document.getElementById('polaroid-frame').classList.remove('show');
+                
                 updateButtons(); 
                 typeWriter();
             }
