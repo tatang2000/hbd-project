@@ -15,10 +15,23 @@
             width: 100vw;
         }
 
-        /* --- BINTANG DI LANGIT --- */
+        /* --- PEMANDANGAN MALAM (TAMPIL DARI AWAL) --- */
+        #night-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+        }
+        #night-sky {
+            position: absolute; top: 0; left: 0; width: 100%; height: 55%;
+            background: linear-gradient(to bottom, #020111 0%, #20124d 100%);
+        }
+        #night-sea {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
+            background: linear-gradient(to bottom, #00102a 0%, #000428 100%);
+            border-top: 1px solid #1a8cff; overflow: hidden;
+        }
+
+        /* --- BINTANG-BINTANG (HANYA DI LANGIT) --- */
         #stars-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0; pointer-events: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
         }
         .star {
             position: absolute; background: #fff; border-radius: 50%;
@@ -29,41 +42,52 @@
             100% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* --- PEMANDANGAN FAJAR (SUNRISE & LAUT BERGERAK) --- */
-        #sunrise-bg {
+        /* --- ANIMASI OMBAK AIR LAUT (TIDAK BERATURAN) --- */
+        .wave-layer {
+            position: absolute; top: 0; left: -20%; width: 140%; height: 100%;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, transparent 60%);
+            background-size: 150px 25px;
+            animation: waveMove 8s infinite alternate ease-in-out;
+        }
+        /* Gelombang lapis kedua dengan arah dan kecepatan berbeda biar saling nabrak natural */
+        .wave-layer:nth-child(2) {
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 50%);
+            background-size: 200px 35px;
+            animation: waveMove2 11s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes waveMove {
+            0% { transform: translateX(0) scaleY(1); }
+            100% { transform: translateX(-50px) scaleY(1.2); }
+        }
+        @keyframes waveMove2 {
+            0% { transform: translateX(0) scaleY(1.1); }
+            100% { transform: translateX(70px) scaleY(0.9); }
+        }
+
+        /* --- TRANSISI FAJAR (SUNRISE MUNCUL SAAT LILIN DITIUP) --- */
+        #sunrise-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0; opacity: 0; transition: opacity 6s ease-in-out;
+            z-index: 1; opacity: 0; transition: opacity 6s ease-in-out; pointer-events: none;
         }
         #sunrise-sky {
             position: absolute; top: 0; left: 0; width: 100%; height: 55%;
             background: linear-gradient(to bottom, #0b0d17 0%, #4a154b 50%, #ff7a59 100%);
         }
-        
-        /* Air Laut dengan Animasi Ripple/Ombak Tipis */
-        #sunrise-sea {
+        /* Warnain laut jadi oranye kemerahan tipis saat fajar */
+        #sunrise-sea-tint {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
-            background: linear-gradient(to bottom, #004e92 0%, #000428 100%);
-            z-index: 2; border-top: 1px solid #1a8cff; overflow: hidden;
+            background: linear-gradient(to bottom, rgba(255,122,89,0.35) 0%, transparent 100%);
         }
-        #sunrise-sea::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, transparent 60%);
-            background-size: 120px 15px; background-repeat: repeat;
-            animation: waveMotion 4s linear infinite; opacity: 0.6;
-        }
-        @keyframes waveMotion {
-            0% { background-position: 0px 0px; }
-            100% { background-position: 120px 0px; }
-        }
-
         .sun {
             position: absolute; bottom: 35%; left: 50%; transform: translateX(-50%);
             width: 120px; height: 120px; background: #ffdf00;
             border-radius: 50%; box-shadow: 0 0 60px #ff9900;
-            transition: bottom 6s ease-in-out; z-index: 1; 
+            transition: bottom 6s ease-in-out; z-index: 2; 
         }
-        #sunrise-bg.dawn-active { opacity: 1; }
-        #sunrise-bg.dawn-active .sun { bottom: 48%; }
+        
+        #sunrise-overlay.dawn-active { opacity: 1; }
+        #sunrise-overlay.dawn-active .sun { bottom: 48%; }
 
         /* --- START SCREEN --- */
         #startScreen {
@@ -79,7 +103,7 @@
         }
         #startScreen button:hover { background: #fff; color: #000; box-shadow: 0 0 30px rgba(255,255,255,0.8); }
 
-        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 
         #vn-container {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -185,14 +209,23 @@
 
     <div id="player"></div>
 
-    <!-- BINTANG-BINTANG DI LANGIT -->
-    <div id="stars-container"></div>
+    <!-- BACKGROUND MALAM & LAUT BERGELOMBANG (TAMPIL AWAL) -->
+    <div id="night-bg">
+        <div id="night-sky">
+            <!-- Tempat Bintang-bintang bersarang -->
+            <div id="stars-container"></div>
+        </div>
+        <div id="night-sea">
+            <div class="wave-layer"></div>
+            <div class="wave-layer"></div>
+        </div>
+    </div>
 
-    <!-- BACKGROUND FAJAR LAUT & LANGIT -->
-    <div id="sunrise-bg">
+    <!-- BACKGROUND TRANSISI FAJAR (MUNCUL AKHIR) -->
+    <div id="sunrise-overlay">
         <div id="sunrise-sky"></div>
         <div class="sun"></div>
-        <div id="sunrise-sea"></div>
+        <div id="sunrise-sea-tint"></div>
     </div>
 
     <!-- MODAL FOTO ZOOM -->
@@ -233,13 +266,14 @@
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // GENERATE BINTANG SECARA ACAK
+        // GENERATE BINTANG HANYA DI SETENGAH LAYAR ATAS (LANGIT)
         const starsContainer = document.getElementById('stars-container');
         for(let i = 0; i < 150; i++) {
             let star = document.createElement('div');
             star.className = 'star';
             star.style.left = Math.random() * 100 + 'vw';
-            star.style.top = Math.random() * 100 + 'vh';
+            // Bintang dibatasi muncul di 54vh (batas langit malam)
+            star.style.top = Math.random() * 54 + 'vh'; 
             let size = Math.random() * 2.5;
             star.style.width = size + 'px';
             star.style.height = size + 'px';
@@ -344,8 +378,8 @@
             document.getElementById('tiupText').style.animation = 'none';
             document.getElementById('tiupText').style.color = '#fff';
             
-            // Saat fajar aktif, bintang otomatis akan memudar tertutup warna gradient #sunrise-bg
-            document.getElementById('sunrise-bg').classList.add('dawn-active');
+            // Fajar Terbit menutupi malam
+            document.getElementById('sunrise-overlay').classList.add('dawn-active');
             
             let photoDelay = 800;
             for(let i = 1; i <= 10; i++) {
@@ -394,7 +428,7 @@
                 clearTimeout(typingTimer); currentPage--; charIndex = 0;
                 document.getElementById("textBox").innerHTML = ""; isTyping = false; finaleTriggered = false; 
                 
-                document.getElementById('sunrise-bg').classList.remove('dawn-active');
+                document.getElementById('sunrise-overlay').classList.remove('dawn-active');
                 for(let i=1; i<=10; i++){
                     let p = document.getElementById('polaroid-' + i);
                     if(p) p.classList.remove('show');
@@ -467,6 +501,7 @@
 
         setInterval(launchRandomFirework, 1500); animate();
 
+        // MENEMBAK KEMBANG API DENGAN MENGKLIK LAYAR KOSONG (BEBAS)
         window.addEventListener('pointerdown', (e) => {
             if(e.target.tagName === 'BUTTON' || e.target.closest('.text-box') || e.target.id === 'flame' || e.target.closest('#photoModal')) return; 
             const targetX = e.clientX; const targetY = e.clientY;
