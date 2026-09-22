@@ -123,7 +123,7 @@
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* --- 10 FOTO POLAROID (MERAPAT KE TENGAH TAPI AMAN) --- */
+        /* --- 10 FOTO POLAROID --- */
         .polaroid {
             position: absolute; background: #fff; padding: 10px 10px 35px 10px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.7); opacity: 0; pointer-events: none;
@@ -147,17 +147,23 @@
             top: 60%; left: 50%; transform: translate(-50%, 50px) rotate(0deg) scale(0.5); z-index: 15;
         }
 
-        /* Posisi Akhir (Merapat membentuk bingkai, tengah tetap aman) */
-        .p1.show { opacity: 1; top: 22%; left: 28%; transform: translate(-50%, -50%) rotate(-15deg) scale(1); z-index: 21; }
-        .p2.show { opacity: 1; top: 15%; left: 40%; transform: translate(-50%, -50%) rotate(8deg) scale(1); z-index: 22; }
-        .p3.show { opacity: 1; top: 15%; left: 60%; transform: translate(-50%, -50%) rotate(-5deg) scale(1); z-index: 23; }
-        .p4.show { opacity: 1; top: 22%; left: 72%; transform: translate(-50%, -50%) rotate(18deg) scale(1); z-index: 24; }
-        .p5.show { opacity: 1; top: 45%; left: 22%; transform: translate(-50%, -50%) rotate(-12deg) scale(1); z-index: 25; }
-        .p6.show { opacity: 1; top: 45%; left: 78%; transform: translate(-50%, -50%) rotate(14deg) scale(1); z-index: 26; }
-        .p7.show { opacity: 1; top: 72%; left: 28%; transform: translate(-50%, -50%) rotate(-20deg) scale(1); z-index: 27; }
-        .p8.show { opacity: 1; top: 72%; left: 72%; transform: translate(-50%, -50%) rotate(5deg) scale(1); z-index: 28; }
-        .p9.show { opacity: 1; top: 60%; left: 18%; transform: translate(-50%, -50%) rotate(-8deg) scale(1); z-index: 29; }
-        .p10.show { opacity: 1; top: 60%; left: 82%; transform: translate(-50%, -50%) rotate(12deg) scale(1); z-index: 30; }
+        /* --- POSISI AKHIR: MEMBENTUK HURUF 'U' TERBALIK (Kiri, Atas, Kanan) --- */
+        
+        /* Barisan Kiri (Dari Bawah ke Atas) */
+        .p1.show { opacity: 1; top: 80%; left: 12%; transform: translate(-50%, -50%) rotate(-15deg) scale(1); z-index: 21; }
+        .p2.show { opacity: 1; top: 50%; left: 8%; transform: translate(-50%, -50%) rotate(8deg) scale(1); z-index: 22; }
+        .p3.show { opacity: 1; top: 20%; left: 12%; transform: translate(-50%, -50%) rotate(-10deg) scale(1); z-index: 23; }
+        
+        /* Barisan Atas (Lengkungan Kiri ke Kanan) */
+        .p4.show { opacity: 1; top: 8%; left: 28%; transform: translate(-50%, -50%) rotate(12deg) scale(1); z-index: 24; }
+        .p5.show { opacity: 1; top: 5%; left: 42%; transform: translate(-50%, -50%) rotate(-5deg) scale(1); z-index: 25; }
+        .p6.show { opacity: 1; top: 5%; left: 58%; transform: translate(-50%, -50%) rotate(10deg) scale(1); z-index: 26; }
+        .p7.show { opacity: 1; top: 8%; left: 72%; transform: translate(-50%, -50%) rotate(-12deg) scale(1); z-index: 27; }
+        
+        /* Barisan Kanan (Dari Atas ke Bawah) */
+        .p8.show { opacity: 1; top: 20%; left: 88%; transform: translate(-50%, -50%) rotate(5deg) scale(1); z-index: 28; }
+        .p9.show { opacity: 1; top: 50%; left: 92%; transform: translate(-50%, -50%) rotate(-8deg) scale(1); z-index: 29; }
+        .p10.show { opacity: 1; top: 80%; left: 88%; transform: translate(-50%, -50%) rotate(15deg) scale(1); z-index: 30; }
 
         /* --- MODAL ZOOM FOTO --- */
         #photoModal {
@@ -183,7 +189,7 @@
         .left-btn { left: 30px; } .right-btn { right: 30px; }
         #player { display: none; }
 
-        /* --- CSS KUE STRAWBERRY (DIPERBESAR & DITURUNKAN) --- */
+        /* --- CSS KUE STRAWBERRY --- */
         .cake-container { 
             margin-top: 50px; 
             display: flex; flex-direction: column; align-items: center; 
@@ -258,7 +264,7 @@
 
     <div id="vn-container" style="display: none;">
         
-        <!-- FOTO DISUSUN MERAPAT MENGELILINGI KOTAK TEKS -->
+        <!-- 10 FOTO -->
         <div class="polaroid p1" id="polaroid-1" onclick="openPhoto('foto1.jpg')"><img src="foto1.jpg"></div>
         <div class="polaroid p2" id="polaroid-2" onclick="openPhoto('foto2.jpg')"><img src="foto2.jpg"></div>
         <div class="polaroid p3" id="polaroid-3" onclick="openPhoto('foto3.jpg')"><img src="foto3.jpg"></div>
@@ -390,7 +396,6 @@
             document.getElementById('flame').style.display = 'none';
             document.getElementById('smoke').classList.add('puff');
             
-            // TEKS DIPERBESAR RAKSASA
             let tiupText = document.getElementById('tiupText');
             tiupText.innerHTML = "Yeayyy! Happy Birthday Intan! 🎉";
             tiupText.style.animation = 'none';
