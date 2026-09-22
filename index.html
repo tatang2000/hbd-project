@@ -15,7 +15,7 @@
             width: 100vw;
         }
 
-        /* --- PEMANDANGAN MALAM (TAMPIL DARI AWAL) --- */
+        /* --- PEMANDANGAN MALAM --- */
         #night-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
         }
@@ -29,7 +29,7 @@
             border-top: 1px solid #1a8cff; overflow: hidden;
         }
 
-        /* --- BINTANG-BINTANG (HANYA DI LANGIT) --- */
+        /* --- BINTANG-BINTANG --- */
         #stars-container {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
         }
@@ -42,14 +42,13 @@
             100% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* --- ANIMASI OMBAK AIR LAUT (TIDAK BERATURAN) --- */
+        /* --- ANIMASI OMBAK AIR LAUT --- */
         .wave-layer {
             position: absolute; top: 0; left: -20%; width: 140%; height: 100%;
             background: radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, transparent 60%);
             background-size: 150px 25px;
             animation: waveMove 8s infinite alternate ease-in-out;
         }
-        /* Gelombang lapis kedua dengan arah dan kecepatan berbeda biar saling nabrak natural */
         .wave-layer:nth-child(2) {
             background: radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 50%);
             background-size: 200px 35px;
@@ -65,7 +64,7 @@
             100% { transform: translateX(70px) scaleY(0.9); }
         }
 
-        /* --- TRANSISI FAJAR (SUNRISE MUNCUL SAAT LILIN DITIUP) --- */
+        /* --- TRANSISI FAJAR --- */
         #sunrise-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1; opacity: 0; transition: opacity 6s ease-in-out; pointer-events: none;
@@ -74,7 +73,6 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 55%;
             background: linear-gradient(to bottom, #0b0d17 0%, #4a154b 50%, #ff7a59 100%);
         }
-        /* Warnain laut jadi oranye kemerahan tipis saat fajar */
         #sunrise-sea-tint {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
             background: linear-gradient(to bottom, rgba(255,122,89,0.35) 0%, transparent 100%);
@@ -125,14 +123,14 @@
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* --- 10 FOTO POLAROID TUMPUK MENYEBAR --- */
+        /* --- 10 FOTO POLAROID MENYEBAR DI PINGGIR (TIDAK MENUTUPI TENGAH) --- */
         .polaroid {
             position: absolute; background: #fff; padding: 10px 10px 35px 10px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.7); opacity: 0; pointer-events: none;
             transition: all 1s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer;
         }
         .polaroid img {
-            width: 150px; height: 150px; object-fit: cover;
+            width: 160px; height: 160px; object-fit: cover;
             filter: grayscale(100%); transition: filter 0.3s;
         }
         
@@ -144,20 +142,22 @@
         }
         .polaroid.show:hover img { filter: grayscale(0%); }
 
+        /* Posisi Awal (Sembunyi di tengah text box) */
         .p1, .p2, .p3, .p4, .p5, .p6, .p7, .p8, .p9, .p10 {
-            top: 70%; left: 50%; transform: translate(-50%, 50px) rotate(0deg); z-index: 15;
+            top: 60%; left: 50%; transform: translate(-50%, 50px) rotate(0deg) scale(0.5); z-index: 15;
         }
 
-        .p1.show { opacity: 1; top: 25%; left: 25%; transform: translate(-50%, -50%) rotate(-15deg); z-index: 21; }
-        .p2.show { opacity: 1; top: 20%; left: 50%; transform: translate(-50%, -50%) rotate(8deg); z-index: 22; }
-        .p3.show { opacity: 1; top: 30%; left: 75%; transform: translate(-50%, -50%) rotate(-5deg); z-index: 23; }
-        .p4.show { opacity: 1; top: 50%; left: 20%; transform: translate(-50%, -50%) rotate(18deg); z-index: 24; }
-        .p5.show { opacity: 1; top: 40%; left: 40%; transform: translate(-50%, -50%) rotate(-12deg); z-index: 25; }
-        .p6.show { opacity: 1; top: 45%; left: 60%; transform: translate(-50%, -50%) rotate(14deg); z-index: 26; }
-        .p7.show { opacity: 1; top: 55%; left: 80%; transform: translate(-50%, -50%) rotate(-20deg); z-index: 27; }
-        .p8.show { opacity: 1; top: 75%; left: 35%; transform: translate(-50%, -50%) rotate(5deg); z-index: 28; }
-        .p9.show { opacity: 1; top: 65%; left: 65%; transform: translate(-50%, -50%) rotate(-8deg); z-index: 29; }
-        .p10.show { opacity: 1; top: 60%; left: 50%; transform: translate(-50%, -50%) rotate(2deg); z-index: 30; }
+        /* Posisi Akhir (Menyebar di pinggir layar / frame melingkar) */
+        .p1.show { opacity: 1; top: 15%; left: 15%; transform: translate(-50%, -50%) rotate(-15deg) scale(1); z-index: 21; }
+        .p2.show { opacity: 1; top: 10%; left: 35%; transform: translate(-50%, -50%) rotate(8deg) scale(1); z-index: 22; }
+        .p3.show { opacity: 1; top: 10%; left: 65%; transform: translate(-50%, -50%) rotate(-5deg) scale(1); z-index: 23; }
+        .p4.show { opacity: 1; top: 15%; left: 85%; transform: translate(-50%, -50%) rotate(18deg) scale(1); z-index: 24; }
+        .p5.show { opacity: 1; top: 45%; left: 10%; transform: translate(-50%, -50%) rotate(-12deg) scale(1); z-index: 25; }
+        .p6.show { opacity: 1; top: 45%; left: 90%; transform: translate(-50%, -50%) rotate(14deg) scale(1); z-index: 26; }
+        .p7.show { opacity: 1; top: 75%; left: 15%; transform: translate(-50%, -50%) rotate(-20deg) scale(1); z-index: 27; }
+        .p8.show { opacity: 1; top: 75%; left: 85%; transform: translate(-50%, -50%) rotate(5deg) scale(1); z-index: 28; }
+        .p9.show { opacity: 1; top: 30%; left: 20%; transform: translate(-50%, -50%) rotate(-8deg) scale(1); z-index: 29; }
+        .p10.show { opacity: 1; top: 30%; left: 80%; transform: translate(-50%, -50%) rotate(12deg) scale(1); z-index: 30; }
 
         /* --- MODAL ZOOM FOTO --- */
         #photoModal {
@@ -183,10 +183,26 @@
         .left-btn { left: 30px; } .right-btn { right: 30px; }
         #player { display: none; }
 
-        /* --- CSS KUE STRAWBERRY --- */
-        .cake-container { margin-top: 40px; display: flex; flex-direction: column; align-items: center; animation: fadeIn 1s forwards; position: relative; }
-        .click-indicator { position: absolute; top: -75px; left: 50%; transform: translateX(-50%); color: #ffaa00; font-size: 2.5rem; animation: bounceArrow 1s infinite; pointer-events: none; z-index: 5; text-shadow: 0 0 15px #ff0043; }
-        .cake-wrapper { position: relative; width: 150px; display: flex; flex-direction: column; align-items: center; }
+        /* --- CSS KUE STRAWBERRY (DIPERBESAR & DITURUNKAN) --- */
+        .cake-container { 
+            margin-top: 50px; /* Posisi lebih turun */
+            display: flex; flex-direction: column; align-items: center; 
+            animation: fadeIn 1s forwards; position: relative; 
+        }
+        
+        .click-indicator { 
+            position: absolute; top: -75px; left: 50%; transform: translateX(-50%); 
+            color: #ffaa00; font-size: 2.5rem; animation: bounceArrow 1s infinite; 
+            pointer-events: none; z-index: 5; text-shadow: 0 0 15px #ff0043; 
+        }
+
+        /* UKURAN KUE DIPERBESAR 1.5x */
+        .cake-wrapper { 
+            position: relative; width: 150px; display: flex; flex-direction: column; align-items: center; 
+            transform: scale(1.5); 
+            margin-top: 30px; margin-bottom: 40px;
+        }
+        
         .cake-flame { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 16px; height: 24px; background: #ffaa00; border-radius: 50% 50% 20% 20%; box-shadow: 0 0 15px #ffaa00, 0 0 30px #ff0043; cursor: pointer; animation: flicker 0.1s infinite alternate; z-index: 45; transition: 0.3s; }
         .cake-flame:hover { transform: translateX(-50%) scale(1.2); }
         .cake-smoke { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 10px; height: 10px; background: #ccc; border-radius: 50%; opacity: 0; z-index: 5; }
@@ -196,7 +212,13 @@
         .berry { position: absolute; width: 18px; height: 20px; background: radial-gradient(circle at 30% 30%, #ff6666, #b30000); border-radius: 50% 50% 40% 40%; z-index: 4; box-shadow: 2px 2px 4px rgba(0,0,0,0.4); }
         .berry1 { left: 20px; top: 25px; } .berry2 { left: 65px; top: 20px; } .berry3 { right: 20px; top: 28px; }
         .cake-body { width: 124px; height: 60px; background: linear-gradient(to right, #d85c8a, #ff7eb3, #d85c8a); border-radius: 5px 5px 8px 8px; position: relative; z-index: 1; margin-top: -15px; box-shadow: inset 0 -10px 15px rgba(0,0,0,0.4); }
-        .tiup-text { margin-top: 25px; font-size: 1.1rem; color: #ffaa00; font-weight: bold; animation: pulse 1.5s infinite; letter-spacing: 1px; z-index: 45; position: relative; }
+        
+        /* Teks Setelah Niup */
+        .tiup-text { 
+            margin-top: 30px; font-size: 1.1rem; color: #ffaa00; font-weight: bold; 
+            animation: pulse 1.5s infinite; letter-spacing: 1px; z-index: 45; position: relative; 
+            transition: all 0.5s ease; /* Transisi agar membesarnya halus */
+        }
 
         @keyframes bounceArrow { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -15px); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -212,7 +234,6 @@
     <!-- BACKGROUND MALAM & LAUT BERGELOMBANG (TAMPIL AWAL) -->
     <div id="night-bg">
         <div id="night-sky">
-            <!-- Tempat Bintang-bintang bersarang -->
             <div id="stars-container"></div>
         </div>
         <div id="night-sea">
@@ -244,21 +265,21 @@
 
     <!-- UI VISUAL NOVEL -->
     <div id="vn-container" style="display: none;">
+        
+        <!-- FOTO DIPINDAH KE LUAR TEXT-BOX AGAR BISA MENYEBAR KE UJUNG LAYAR -->
+        <div class="polaroid p1" id="polaroid-1" onclick="openPhoto('foto1.jpg')"><img src="foto1.jpg"></div>
+        <div class="polaroid p2" id="polaroid-2" onclick="openPhoto('foto2.jpg')"><img src="foto2.jpg"></div>
+        <div class="polaroid p3" id="polaroid-3" onclick="openPhoto('foto3.jpg')"><img src="foto3.jpg"></div>
+        <div class="polaroid p4" id="polaroid-4" onclick="openPhoto('foto4.jpg')"><img src="foto4.jpg"></div>
+        <div class="polaroid p5" id="polaroid-5" onclick="openPhoto('foto5.jpg')"><img src="foto5.jpg"></div>
+        <div class="polaroid p6" id="polaroid-6" onclick="openPhoto('foto6.jpg')"><img src="foto6.jpg"></div>
+        <div class="polaroid p7" id="polaroid-7" onclick="openPhoto('foto7.jpg')"><img src="foto7.jpg"></div>
+        <div class="polaroid p8" id="polaroid-8" onclick="openPhoto('foto8.jpg')"><img src="foto8.jpg"></div>
+        <div class="polaroid p9" id="polaroid-9" onclick="openPhoto('foto9.jpg')"><img src="foto9.jpg"></div>
+        <div class="polaroid p10" id="polaroid-10" onclick="openPhoto('foto10.jpg')"><img src="foto10.jpg"></div>
+
         <button class="nav-btn left-btn" id="prevBtn" onclick="turnPrevPage()">&#10094;</button>
         <div class="text-box" id="textBoxBox">
-            
-            <!-- 10 FOTO POLAROID -->
-            <div class="polaroid p1" id="polaroid-1" onclick="openPhoto('foto1.jpg')"><img src="foto1.jpg"></div>
-            <div class="polaroid p2" id="polaroid-2" onclick="openPhoto('foto2.jpg')"><img src="foto2.jpg"></div>
-            <div class="polaroid p3" id="polaroid-3" onclick="openPhoto('foto3.jpg')"><img src="foto3.jpg"></div>
-            <div class="polaroid p4" id="polaroid-4" onclick="openPhoto('foto4.jpg')"><img src="foto4.jpg"></div>
-            <div class="polaroid p5" id="polaroid-5" onclick="openPhoto('foto5.jpg')"><img src="foto5.jpg"></div>
-            <div class="polaroid p6" id="polaroid-6" onclick="openPhoto('foto6.jpg')"><img src="foto6.jpg"></div>
-            <div class="polaroid p7" id="polaroid-7" onclick="openPhoto('foto7.jpg')"><img src="foto7.jpg"></div>
-            <div class="polaroid p8" id="polaroid-8" onclick="openPhoto('foto8.jpg')"><img src="foto8.jpg"></div>
-            <div class="polaroid p9" id="polaroid-9" onclick="openPhoto('foto9.jpg')"><img src="foto9.jpg"></div>
-            <div class="polaroid p10" id="polaroid-10" onclick="openPhoto('foto10.jpg')"><img src="foto10.jpg"></div>
-            
             <div id="textBox"></div>
         </div>
         <button class="nav-btn right-btn" id="nextBtn" onclick="turnNextPage()">&#10095;</button>
@@ -266,13 +287,12 @@
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // GENERATE BINTANG HANYA DI SETENGAH LAYAR ATAS (LANGIT)
+        // GENERATE BINTANG HANYA DI SETENGAH LAYAR ATAS
         const starsContainer = document.getElementById('stars-container');
         for(let i = 0; i < 150; i++) {
             let star = document.createElement('div');
             star.className = 'star';
             star.style.left = Math.random() * 100 + 'vw';
-            // Bintang dibatasi muncul di 54vh (batas langit malam)
             star.style.top = Math.random() * 54 + 'vh'; 
             let size = Math.random() * 2.5;
             star.style.width = size + 'px';
@@ -288,7 +308,12 @@
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 height: '0', width: '0', videoId: 'W-NLEEyycao', 
-                playerVars: { 'autoplay': 0, 'loop': 1, 'controls': 0 }
+                playerVars: { 
+                    'autoplay': 0, 
+                    'loop': 1, 
+                    'playlist': 'W-NLEEyycao', // Playlist ini WAJIB agar loop berfungsi di Youtube API
+                    'controls': 0 
+                }
             });
         }
 
@@ -374,20 +399,25 @@
             document.getElementById('flame').style.display = 'none';
             document.getElementById('smoke').classList.add('puff');
             
-            document.getElementById('tiupText').innerHTML = "Yeayyy! Happy Birthday Intan! 🎉";
-            document.getElementById('tiupText').style.animation = 'none';
-            document.getElementById('tiupText').style.color = '#fff';
+            // TEKS DIPERBESAR RAKSASA
+            let tiupText = document.getElementById('tiupText');
+            tiupText.innerHTML = "Yeayyy! Happy Birthday Intan! 🎉";
+            tiupText.style.animation = 'none';
+            tiupText.style.color = '#fff';
+            tiupText.style.fontSize = '2.2rem';
+            tiupText.style.marginTop = '40px';
+            tiupText.style.textShadow = '0 0 15px #ff0043';
             
-            // Fajar Terbit menutupi malam
             document.getElementById('sunrise-overlay').classList.add('dawn-active');
             
+            // FOTO MENYEBAR KE PINGGIR LAYAR (TIDAK MENUTUPI KUE DAN TEKS)
             let photoDelay = 800;
             for(let i = 1; i <= 10; i++) {
                 setTimeout(() => {
                     let photo = document.getElementById('polaroid-' + i);
                     if(photo) photo.classList.add('show');
                 }, photoDelay);
-                photoDelay += 200; 
+                photoDelay += 150; 
             }
 
             setTimeout(() => { launchFinale(); }, 1500);
@@ -501,9 +531,8 @@
 
         setInterval(launchRandomFirework, 1500); animate();
 
-        // MENEMBAK KEMBANG API DENGAN MENGKLIK LAYAR KOSONG (BEBAS)
         window.addEventListener('pointerdown', (e) => {
-            if(e.target.tagName === 'BUTTON' || e.target.closest('.text-box') || e.target.id === 'flame' || e.target.closest('#photoModal')) return; 
+            if(e.target.tagName === 'BUTTON' || e.target.closest('.text-box') || e.target.id === 'flame' || e.target.closest('#photoModal') || e.target.closest('.polaroid')) return; 
             const targetX = e.clientX; const targetY = e.clientY;
             const startX = Math.random() * canvas.width; const startY = canvas.height;
             const distanceY = startY - targetY; const safeDistanceY = Math.max(distanceY, 10); 
