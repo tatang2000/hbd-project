@@ -123,7 +123,7 @@
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* --- 10 FOTO POLAROID MENYEBAR DI PINGGIR (TIDAK MENUTUPI TENGAH) --- */
+        /* --- 10 FOTO POLAROID (MERAPAT KE TENGAH TAPI AMAN) --- */
         .polaroid {
             position: absolute; background: #fff; padding: 10px 10px 35px 10px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.7); opacity: 0; pointer-events: none;
@@ -142,22 +142,22 @@
         }
         .polaroid.show:hover img { filter: grayscale(0%); }
 
-        /* Posisi Awal (Sembunyi di tengah text box) */
+        /* Posisi Awal (Sembunyi di tengah) */
         .p1, .p2, .p3, .p4, .p5, .p6, .p7, .p8, .p9, .p10 {
             top: 60%; left: 50%; transform: translate(-50%, 50px) rotate(0deg) scale(0.5); z-index: 15;
         }
 
-        /* Posisi Akhir (Menyebar di pinggir layar / frame melingkar) */
-        .p1.show { opacity: 1; top: 15%; left: 15%; transform: translate(-50%, -50%) rotate(-15deg) scale(1); z-index: 21; }
-        .p2.show { opacity: 1; top: 10%; left: 35%; transform: translate(-50%, -50%) rotate(8deg) scale(1); z-index: 22; }
-        .p3.show { opacity: 1; top: 10%; left: 65%; transform: translate(-50%, -50%) rotate(-5deg) scale(1); z-index: 23; }
-        .p4.show { opacity: 1; top: 15%; left: 85%; transform: translate(-50%, -50%) rotate(18deg) scale(1); z-index: 24; }
-        .p5.show { opacity: 1; top: 45%; left: 10%; transform: translate(-50%, -50%) rotate(-12deg) scale(1); z-index: 25; }
-        .p6.show { opacity: 1; top: 45%; left: 90%; transform: translate(-50%, -50%) rotate(14deg) scale(1); z-index: 26; }
-        .p7.show { opacity: 1; top: 75%; left: 15%; transform: translate(-50%, -50%) rotate(-20deg) scale(1); z-index: 27; }
-        .p8.show { opacity: 1; top: 75%; left: 85%; transform: translate(-50%, -50%) rotate(5deg) scale(1); z-index: 28; }
-        .p9.show { opacity: 1; top: 30%; left: 20%; transform: translate(-50%, -50%) rotate(-8deg) scale(1); z-index: 29; }
-        .p10.show { opacity: 1; top: 30%; left: 80%; transform: translate(-50%, -50%) rotate(12deg) scale(1); z-index: 30; }
+        /* Posisi Akhir (Merapat membentuk bingkai, tengah tetap aman) */
+        .p1.show { opacity: 1; top: 22%; left: 28%; transform: translate(-50%, -50%) rotate(-15deg) scale(1); z-index: 21; }
+        .p2.show { opacity: 1; top: 15%; left: 40%; transform: translate(-50%, -50%) rotate(8deg) scale(1); z-index: 22; }
+        .p3.show { opacity: 1; top: 15%; left: 60%; transform: translate(-50%, -50%) rotate(-5deg) scale(1); z-index: 23; }
+        .p4.show { opacity: 1; top: 22%; left: 72%; transform: translate(-50%, -50%) rotate(18deg) scale(1); z-index: 24; }
+        .p5.show { opacity: 1; top: 45%; left: 22%; transform: translate(-50%, -50%) rotate(-12deg) scale(1); z-index: 25; }
+        .p6.show { opacity: 1; top: 45%; left: 78%; transform: translate(-50%, -50%) rotate(14deg) scale(1); z-index: 26; }
+        .p7.show { opacity: 1; top: 72%; left: 28%; transform: translate(-50%, -50%) rotate(-20deg) scale(1); z-index: 27; }
+        .p8.show { opacity: 1; top: 72%; left: 72%; transform: translate(-50%, -50%) rotate(5deg) scale(1); z-index: 28; }
+        .p9.show { opacity: 1; top: 60%; left: 18%; transform: translate(-50%, -50%) rotate(-8deg) scale(1); z-index: 29; }
+        .p10.show { opacity: 1; top: 60%; left: 82%; transform: translate(-50%, -50%) rotate(12deg) scale(1); z-index: 30; }
 
         /* --- MODAL ZOOM FOTO --- */
         #photoModal {
@@ -185,7 +185,7 @@
 
         /* --- CSS KUE STRAWBERRY (DIPERBESAR & DITURUNKAN) --- */
         .cake-container { 
-            margin-top: 50px; /* Posisi lebih turun */
+            margin-top: 50px; 
             display: flex; flex-direction: column; align-items: center; 
             animation: fadeIn 1s forwards; position: relative; 
         }
@@ -196,7 +196,6 @@
             pointer-events: none; z-index: 5; text-shadow: 0 0 15px #ff0043; 
         }
 
-        /* UKURAN KUE DIPERBESAR 1.5x */
         .cake-wrapper { 
             position: relative; width: 150px; display: flex; flex-direction: column; align-items: center; 
             transform: scale(1.5); 
@@ -213,11 +212,10 @@
         .berry1 { left: 20px; top: 25px; } .berry2 { left: 65px; top: 20px; } .berry3 { right: 20px; top: 28px; }
         .cake-body { width: 124px; height: 60px; background: linear-gradient(to right, #d85c8a, #ff7eb3, #d85c8a); border-radius: 5px 5px 8px 8px; position: relative; z-index: 1; margin-top: -15px; box-shadow: inset 0 -10px 15px rgba(0,0,0,0.4); }
         
-        /* Teks Setelah Niup */
         .tiup-text { 
             margin-top: 30px; font-size: 1.1rem; color: #ffaa00; font-weight: bold; 
             animation: pulse 1.5s infinite; letter-spacing: 1px; z-index: 45; position: relative; 
-            transition: all 0.5s ease; /* Transisi agar membesarnya halus */
+            transition: all 0.5s ease; 
         }
 
         @keyframes bounceArrow { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -15px); } }
@@ -231,7 +229,6 @@
 
     <div id="player"></div>
 
-    <!-- BACKGROUND MALAM & LAUT BERGELOMBANG (TAMPIL AWAL) -->
     <div id="night-bg">
         <div id="night-sky">
             <div id="stars-container"></div>
@@ -242,31 +239,26 @@
         </div>
     </div>
 
-    <!-- BACKGROUND TRANSISI FAJAR (MUNCUL AKHIR) -->
     <div id="sunrise-overlay">
         <div id="sunrise-sky"></div>
         <div class="sun"></div>
         <div id="sunrise-sea-tint"></div>
     </div>
 
-    <!-- MODAL FOTO ZOOM -->
     <div id="photoModal" onclick="closePhoto()">
         <img id="enlargedImg" src="" alt="Zoom Memory">
         <div class="close-modal">(Klik dimana saja untuk tutup)</div>
     </div>
 
-    <!-- START SCREEN -->
     <div id="startScreen">
         <button onclick="startApp()">Buka Pesan</button>
     </div>
 
-    <!-- KANVAS PETASAN -->
     <canvas id="fwCanvas"></canvas>
 
-    <!-- UI VISUAL NOVEL -->
     <div id="vn-container" style="display: none;">
         
-        <!-- FOTO DIPINDAH KE LUAR TEXT-BOX AGAR BISA MENYEBAR KE UJUNG LAYAR -->
+        <!-- FOTO DISUSUN MERAPAT MENGELILINGI KOTAK TEKS -->
         <div class="polaroid p1" id="polaroid-1" onclick="openPhoto('foto1.jpg')"><img src="foto1.jpg"></div>
         <div class="polaroid p2" id="polaroid-2" onclick="openPhoto('foto2.jpg')"><img src="foto2.jpg"></div>
         <div class="polaroid p3" id="polaroid-3" onclick="openPhoto('foto3.jpg')"><img src="foto3.jpg"></div>
@@ -287,7 +279,6 @@
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // GENERATE BINTANG HANYA DI SETENGAH LAYAR ATAS
         const starsContainer = document.getElementById('stars-container');
         for(let i = 0; i < 150; i++) {
             let star = document.createElement('div');
@@ -311,7 +302,7 @@
                 playerVars: { 
                     'autoplay': 0, 
                     'loop': 1, 
-                    'playlist': 'W-NLEEyycao', // Playlist ini WAJIB agar loop berfungsi di Youtube API
+                    'playlist': 'W-NLEEyycao', 
                     'controls': 0 
                 }
             });
@@ -410,7 +401,6 @@
             
             document.getElementById('sunrise-overlay').classList.add('dawn-active');
             
-            // FOTO MENYEBAR KE PINGGIR LAYAR (TIDAK MENUTUPI KUE DAN TEKS)
             let photoDelay = 800;
             for(let i = 1; i <= 10; i++) {
                 setTimeout(() => {
