@@ -14,7 +14,7 @@
             --bg-night-bot: #23184d;
             --sea-top: #041533;
             --sea-bot: #02061c;
-            --glass-bg: rgba(11, 16, 38, 0.62);
+            --glass-bg: linear-gradient(155deg, rgba(16, 23, 52, 0.86) 0%, rgba(9, 13, 32, 0.90) 100%);
             --glass-border: rgba(196, 219, 255, 0.22);
             --accent-gold: #ffd479;
             --accent-rose: #ff7ea5;
@@ -57,9 +57,12 @@
             background: linear-gradient(180deg, var(--bg-night-top) 0%, var(--bg-night-mid) 55%, var(--bg-night-bot) 100%);
         }
 
-        #stars-container {
+        #stars-container,
+        canvas#skyCanvas {
             position: absolute;
             inset: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
         }
 
@@ -67,28 +70,28 @@
             position: absolute;
             background: #fff;
             border-radius: 50%;
+            will-change: opacity;
             animation: twinkle infinite alternate ease-in-out;
         }
 
         .star.warm {
             background: #ffe6b3;
-            box-shadow: 0 0 6px rgba(255, 224, 150, 0.6);
         }
 
         @keyframes twinkle {
-            0% { opacity: 0.2; transform: scale(0.8); }
-            100% { opacity: 0.95; transform: scale(1.25); }
+            0% { opacity: 0.22; }
+            100% { opacity: 0.95; }
         }
 
         .shooting-star {
             position: absolute;
             width: 110px;
             height: 2px;
-            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.95) 100%);
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.92) 100%);
             border-radius: 999px;
             opacity: 0;
-            filter: drop-shadow(0 0 6px #bde0ff);
             pointer-events: none;
+            will-change: transform, opacity;
             animation: shoot 1.15s ease-out forwards;
         }
 
@@ -107,7 +110,7 @@
             height: 68px;
             border-radius: 50%;
             background: radial-gradient(circle at 35% 35%, #fff9e6 0%, #f6dfb2 65%, #e6c48a 100%);
-            box-shadow: 0 0 38px rgba(255, 232, 179, 0.45), 0 0 90px rgba(173, 203, 255, 0.18);
+            box-shadow: 0 0 36px rgba(255, 232, 179, 0.38);
             transition: opacity 4s ease, transform 5s ease;
         }
 
@@ -125,7 +128,7 @@
 
         body.dawn-mode .moon {
             opacity: 0.18;
-            transform: translateY(18px) scale(0.92);
+            transform: translate3d(0, 18px, 0) scale(0.92);
         }
 
         /* --- OCEAN --- */
@@ -137,19 +140,17 @@
             height: 42%;
             background: linear-gradient(180deg, var(--sea-top) 0%, #030c26 48%, var(--sea-bot) 100%);
             border-top: 1px solid rgba(125, 207, 255, 0.35);
-            box-shadow: inset 0 12px 35px rgba(72, 146, 255, 0.14);
+            box-shadow: inset 0 12px 32px rgba(72, 146, 255, 0.12);
             overflow: hidden;
         }
 
         .sea-moon-reflection {
             position: absolute;
-            top: 2px;
-            left: 11%;
-            width: 84px;
+            top: 0;
+            left: 9.5%;
+            width: 110px;
             height: 78%;
-            background: radial-gradient(ellipse at 50% 8%, rgba(255, 239, 194, 0.24) 0%, rgba(255, 239, 194, 0.08) 45%, transparent 78%);
-            filter: blur(11px);
-            animation: shimmerDrift 4.5s ease-in-out infinite alternate;
+            background: radial-gradient(ellipse at 50% 6%, rgba(255, 239, 194, 0.20) 0%, rgba(255, 239, 194, 0.06) 45%, transparent 72%);
             transition: opacity 4s ease;
         }
 
@@ -157,36 +158,21 @@
             opacity: 0;
         }
 
-        @keyframes shimmerDrift {
-            0% { transform: translateX(-6px) scaleX(0.95); }
-            100% { transform: translateX(8px) scaleX(1.08); }
-        }
-
         .wave-layer {
             position: absolute;
             top: 0;
-            left: -20%;
-            width: 140%;
+            left: -15%;
+            width: 130%;
             height: 100%;
-            background: radial-gradient(ellipse at center, rgba(162, 213, 255, 0.13) 0%, transparent 62%);
-            background-size: 165px 24px;
-            animation: waveMove 8s infinite alternate ease-in-out;
-        }
-
-        .wave-layer:nth-child(3) {
-            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.08) 0%, transparent 55%);
-            background-size: 220px 32px;
-            animation: waveMove2 12s infinite alternate-reverse ease-in-out;
+            background: radial-gradient(ellipse at center, rgba(162, 213, 255, 0.12) 0%, transparent 62%);
+            background-size: 165px 26px;
+            will-change: transform;
+            animation: waveMove 9s infinite alternate ease-in-out;
         }
 
         @keyframes waveMove {
-            0% { transform: translateX(0) scaleY(1); }
-            100% { transform: translateX(-45px) scaleY(1.18); }
-        }
-
-        @keyframes waveMove2 {
-            0% { transform: translateX(0) scaleY(1.08); }
-            100% { transform: translateX(55px) scaleY(0.92); }
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-40px, 0, 0); }
         }
 
         /* --- FIREFLIES / AMBIENT SPARKS --- */
@@ -200,20 +186,20 @@
 
         .firefly {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: #ffe194;
-            box-shadow: 0 0 10px 2px rgba(255, 212, 121, 0.55);
+            background: radial-gradient(circle, #fff3c4 0%, rgba(255, 212, 121, 0.45) 42%, transparent 72%);
             opacity: 0;
+            will-change: transform, opacity;
             animation: floatFirefly linear infinite;
         }
 
         @keyframes floatFirefly {
-            0% { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.7); }
-            25% { opacity: 0.75; }
-            75% { opacity: 0.6; }
-            100% { opacity: 0; transform: translate3d(var(--dx, 35px), -85px, 0) scale(1.1); }
+            0% { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.75); }
+            25% { opacity: 0.78; }
+            75% { opacity: 0.62; }
+            100% { opacity: 0; transform: translate3d(var(--dx, 35px), -85px, 0) scale(1.05); }
         }
 
         /* --- SUNRISE FINALE --- */
@@ -222,7 +208,8 @@
             inset: 0;
             z-index: 1;
             opacity: 0;
-            transition: opacity 5.5s ease-in-out;
+            will-change: opacity;
+            transition: opacity 5s ease-in-out;
             pointer-events: none;
         }
 
@@ -239,13 +226,13 @@
             position: absolute;
             bottom: 34%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate3d(-50%, 0, 0);
             width: 136px;
             height: 136px;
             border-radius: 50%;
             background: radial-gradient(circle at center, #fff5c0 0%, #ffd257 52%, #ff8552 100%);
-            box-shadow: 0 0 55px rgba(255, 178, 92, 0.9), 0 0 130px rgba(255, 114, 94, 0.55);
-            transition: bottom 5.5s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 55px rgba(255, 178, 92, 0.85);
+            transition: transform 5s cubic-bezier(0.22, 1, 0.36, 1);
             z-index: 2;
         }
 
@@ -262,12 +249,10 @@
             position: absolute;
             top: 0;
             left: 50%;
-            transform: translateX(-50%);
-            width: 240px;
+            transform: translate3d(-50%, 0, 0);
+            width: 260px;
             height: 90%;
-            background: radial-gradient(ellipse at 50% 6%, rgba(255, 224, 130, 0.48) 0%, rgba(255, 138, 92, 0.18) 48%, transparent 78%);
-            filter: blur(14px);
-            animation: shimmerDrift 3.6s ease-in-out infinite alternate;
+            background: radial-gradient(ellipse at 50% 6%, rgba(255, 224, 130, 0.42) 0%, rgba(255, 138, 92, 0.15) 48%, transparent 74%);
         }
 
         #sunrise-overlay.dawn-active {
@@ -275,7 +260,7 @@
         }
 
         #sunrise-overlay.dawn-active .sun {
-            bottom: 44%;
+            transform: translate3d(-50%, -9vh, 0);
         }
 
         /* --- FIREWORKS CANVAS --- */
@@ -297,10 +282,8 @@
             justify-content: center;
             align-items: center;
             padding: 24px;
-            background: radial-gradient(circle at 50% 45%, rgba(24, 29, 70, 0.72) 0%, rgba(4, 5, 18, 0.94) 75%);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: opacity 0.8s ease, visibility 0.8s ease;
+            background: radial-gradient(circle at 50% 45%, rgba(24, 29, 70, 0.86) 0%, rgba(4, 5, 18, 0.96) 75%);
+            transition: opacity 0.6s ease, visibility 0.6s ease;
         }
 
         #startScreen.hide {
@@ -406,16 +389,14 @@
             gap: 7px;
             padding: 8px 14px;
             border-radius: 999px;
-            background: rgba(11, 16, 38, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(11, 16, 38, 0.86);
+            border: 1px solid rgba(255, 255, 255, 0.22);
             color: var(--text-main);
             font-family: inherit;
             font-size: 0.8rem;
             font-weight: 500;
             cursor: pointer;
-            transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
         }
 
         .pill-btn:hover {
@@ -519,14 +500,13 @@
             background: #fcfaf5;
             padding: 7px 7px 24px 7px;
             border-radius: 3px;
-            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.48);
             opacity: 0;
             pointer-events: none;
             cursor: pointer;
-            transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.75s ease, top 0.9s cubic-bezier(0.22, 1, 0.36, 1), left 0.9s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
-            top: 190px;
-            left: 50%;
-            transform: translate(-50%, 60px) scale(0.45) rotate(0deg);
+            will-change: transform, opacity;
+            transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.65s ease;
+            transform: translate3d(-50%, 95px, 0) scale(0.5);
         }
 
         .polaroid::before {
@@ -539,7 +519,6 @@
             height: 10px;
             background: rgba(255, 224, 158, 0.75);
             border-radius: 2px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
         }
 
         .polaroid img {
@@ -549,8 +528,6 @@
             object-fit: cover;
             object-position: center 22%;
             border-radius: 1px;
-            filter: grayscale(45%) contrast(1.03);
-            transition: filter 0.35s ease;
         }
 
         .polaroid-caption {
@@ -575,25 +552,31 @@
 
         .polaroid.show:hover {
             z-index: 48 !important;
-            transform: translate(-50%, 6px) scale(1.24) rotate(0deg) !important;
-            box-shadow: 0 22px 48px rgba(0, 0, 0, 0.8), 0 0 24px rgba(255, 212, 121, 0.35);
+            transform: translate3d(-50%, 6px, 0) scale(1.22) rotate(0deg) !important;
         }
 
-        .polaroid.show:hover img {
-            filter: grayscale(0%) contrast(1.04) saturate(1.06);
-        }
+        /* Static positions for compositor-only animation (zero top/left reflow) */
+        .p1  { top: 44px; left: 7%;    z-index: 21; }
+        .p2  { top: 68px; left: 16.5%; z-index: 22; }
+        .p3  { top: 82px; left: 26%;   z-index: 23; }
+        .p4  { top: 92px; left: 35.5%; z-index: 24; }
+        .p5  { top: 96px; left: 45%;   z-index: 25; }
+        .p6  { top: 96px; left: 55%;   z-index: 26; }
+        .p7  { top: 92px; left: 64.5%; z-index: 27; }
+        .p8  { top: 82px; left: 74%;   z-index: 28; }
+        .p9  { top: 68px; left: 83.5%; z-index: 29; }
+        .p10 { top: 44px; left: 93%;   z-index: 30; }
 
-        /* Gentle catenary curve for desktop 10 portrait polaroids */
-        .p1.show  { top: 44px; left: 7%;  transform: translate(-50%, 0) rotate(-9deg) scale(1);  z-index: 21; }
-        .p2.show  { top: 68px; left: 16.5%; transform: translate(-50%, 0) rotate(6deg) scale(1);  z-index: 22; }
-        .p3.show  { top: 82px; left: 26%; transform: translate(-50%, 0) rotate(-7deg) scale(1); z-index: 23; }
-        .p4.show  { top: 92px; left: 35.5%; transform: translate(-50%, 0) rotate(5deg) scale(1); z-index: 24; }
-        .p5.show  { top: 96px; left: 45%; transform: translate(-50%, 0) rotate(-4deg) scale(1); z-index: 25; }
-        .p6.show  { top: 96px; left: 55%; transform: translate(-50%, 0) rotate(5deg) scale(1);  z-index: 26; }
-        .p7.show  { top: 92px; left: 64.5%; transform: translate(-50%, 0) rotate(-6deg) scale(1); z-index: 27; }
-        .p8.show  { top: 82px; left: 74%; transform: translate(-50%, 0) rotate(8deg) scale(1);  z-index: 28; }
-        .p9.show  { top: 68px; left: 83.5%; transform: translate(-50%, 0) rotate(-7deg) scale(1); z-index: 29; }
-        .p10.show { top: 44px; left: 93%; transform: translate(-50%, 0) rotate(8deg) scale(1);  z-index: 30; }
+        .p1.show  { transform: translate3d(-50%, 0, 0) rotate(-9deg) scale(1); }
+        .p2.show  { transform: translate3d(-50%, 0, 0) rotate(6deg) scale(1); }
+        .p3.show  { transform: translate3d(-50%, 0, 0) rotate(-7deg) scale(1); }
+        .p4.show  { transform: translate3d(-50%, 0, 0) rotate(5deg) scale(1); }
+        .p5.show  { transform: translate3d(-50%, 0, 0) rotate(-4deg) scale(1); }
+        .p6.show  { transform: translate3d(-50%, 0, 0) rotate(5deg) scale(1); }
+        .p7.show  { transform: translate3d(-50%, 0, 0) rotate(-6deg) scale(1); }
+        .p8.show  { transform: translate3d(-50%, 0, 0) rotate(8deg) scale(1); }
+        .p9.show  { transform: translate3d(-50%, 0, 0) rotate(-7deg) scale(1); }
+        .p10.show { transform: translate3d(-50%, 0, 0) rotate(8deg) scale(1); }
 
         .garland-hint {
             position: fixed;
@@ -603,9 +586,8 @@
             z-index: 24;
             padding: 5px 14px;
             border-radius: 999px;
-            background: rgba(11, 16, 38, 0.56);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            backdrop-filter: blur(8px);
+            background: rgba(11, 16, 38, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.16);
             font-size: 0.76rem;
             color: var(--accent-gold);
             letter-spacing: 0.4px;
@@ -636,16 +618,14 @@
             border: 1px solid var(--glass-border);
             border-radius: 26px;
             padding: 24px 36px 30px;
-            backdrop-filter: blur(18px) saturate(135%);
-            -webkit-backdrop-filter: blur(18px) saturate(135%);
-            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+            box-shadow: 0 20px 54px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
             pointer-events: auto;
             position: relative;
-            transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: transform 0.35s ease, min-height 0.35s ease;
             cursor: pointer;
         }
 
@@ -715,6 +695,7 @@
             max-width: 620px;
             font-weight: 400;
             letter-spacing: 0.1px;
+            white-space: pre-line;
         }
 
         .story-copy.finale-quote {
@@ -754,11 +735,9 @@
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background: rgba(11, 16, 38, 0.58);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            color: rgba(255, 255, 255, 0.86);
+            background: rgba(11, 16, 38, 0.84);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            color: rgba(255, 255, 255, 0.88);
             font-size: 1.4rem;
             display: inline-flex;
             align-items: center;
@@ -766,7 +745,7 @@
             cursor: pointer;
             pointer-events: auto;
             flex-shrink: 0;
-            transition: all 0.25s ease;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
         }
 
         .nav-btn:hover {
@@ -1061,11 +1040,9 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            background: rgba(5, 8, 22, 0.88);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(5, 8, 22, 0.92);
             opacity: 0;
-            transition: opacity 0.28s ease;
+            transition: opacity 0.25s ease;
         }
 
         #photoModal.active {
@@ -1281,12 +1258,12 @@
 
     <div id="night-bg">
         <div id="night-sky">
+            <canvas id="skyCanvas"></canvas>
             <div id="stars-container"></div>
             <div class="moon"></div>
         </div>
         <div id="night-sea">
             <div class="sea-moon-reflection"></div>
-            <div class="wave-layer"></div>
             <div class="wave-layer"></div>
         </div>
     </div>
@@ -1327,16 +1304,16 @@
             <circle cx="1116" cy="42" r="3" fill="#ffe6a3" opacity="0.85" />
         </svg>
         <div class="polaroid-track" id="polaroidTrack">
-            <div class="polaroid p1" id="polaroid-1" onclick="openPhoto(0)"><img src="foto1.jpg" alt="Kenangan 1"><span class="polaroid-caption">Memory #01</span></div>
-            <div class="polaroid p2" id="polaroid-2" onclick="openPhoto(1)"><img src="foto2.jpg" alt="Kenangan 2"><span class="polaroid-caption">Memory #02</span></div>
-            <div class="polaroid p3" id="polaroid-3" onclick="openPhoto(2)"><img src="foto3.jpg" alt="Kenangan 3"><span class="polaroid-caption">Memory #03</span></div>
-            <div class="polaroid p4" id="polaroid-4" onclick="openPhoto(3)"><img src="foto4.jpg" alt="Kenangan 4"><span class="polaroid-caption">Memory #04</span></div>
-            <div class="polaroid p5" id="polaroid-5" onclick="openPhoto(4)"><img src="foto5.jpg" alt="Kenangan 5"><span class="polaroid-caption">Memory #05</span></div>
-            <div class="polaroid p6" id="polaroid-6" onclick="openPhoto(5)"><img src="foto6.jpg" alt="Kenangan 6"><span class="polaroid-caption">Memory #06</span></div>
-            <div class="polaroid p7" id="polaroid-7" onclick="openPhoto(6)"><img src="foto7.jpg" alt="Kenangan 7"><span class="polaroid-caption">Memory #07</span></div>
-            <div class="polaroid p8" id="polaroid-8" onclick="openPhoto(7)"><img src="foto8.jpg" alt="Kenangan 8"><span class="polaroid-caption">Memory #08</span></div>
-            <div class="polaroid p9" id="polaroid-9" onclick="openPhoto(8)"><img src="foto9.jpg" alt="Kenangan 9"><span class="polaroid-caption">Memory #09</span></div>
-            <div class="polaroid p10" id="polaroid-10" onclick="openPhoto(9)"><img src="foto10.jpg" alt="Kenangan 10"><span class="polaroid-caption">Memory #10</span></div>
+            <div class="polaroid p1" id="polaroid-1" onclick="openPhoto(0)"><img src="foto1.jpg" alt="Kenangan 1" decoding="async"><span class="polaroid-caption">Memory #01</span></div>
+            <div class="polaroid p2" id="polaroid-2" onclick="openPhoto(1)"><img src="foto2.jpg" alt="Kenangan 2" decoding="async"><span class="polaroid-caption">Memory #02</span></div>
+            <div class="polaroid p3" id="polaroid-3" onclick="openPhoto(2)"><img src="foto3.jpg" alt="Kenangan 3" decoding="async"><span class="polaroid-caption">Memory #03</span></div>
+            <div class="polaroid p4" id="polaroid-4" onclick="openPhoto(3)"><img src="foto4.jpg" alt="Kenangan 4" decoding="async"><span class="polaroid-caption">Memory #04</span></div>
+            <div class="polaroid p5" id="polaroid-5" onclick="openPhoto(4)"><img src="foto5.jpg" alt="Kenangan 5" decoding="async"><span class="polaroid-caption">Memory #05</span></div>
+            <div class="polaroid p6" id="polaroid-6" onclick="openPhoto(5)"><img src="foto6.jpg" alt="Kenangan 6" decoding="async"><span class="polaroid-caption">Memory #06</span></div>
+            <div class="polaroid p7" id="polaroid-7" onclick="openPhoto(6)"><img src="foto7.jpg" alt="Kenangan 7" decoding="async"><span class="polaroid-caption">Memory #07</span></div>
+            <div class="polaroid p8" id="polaroid-8" onclick="openPhoto(7)"><img src="foto8.jpg" alt="Kenangan 8" decoding="async"><span class="polaroid-caption">Memory #08</span></div>
+            <div class="polaroid p9" id="polaroid-9" onclick="openPhoto(8)"><img src="foto9.jpg" alt="Kenangan 9" decoding="async"><span class="polaroid-caption">Memory #09</span></div>
+            <div class="polaroid p10" id="polaroid-10" onclick="openPhoto(9)"><img src="foto10.jpg" alt="Kenangan 10" decoding="async"><span class="polaroid-caption">Memory #10</span></div>
         </div>
     </div>
     <div class="garland-hint" id="garlandHint">Klik foto untuk memperbesar ✨</div>
@@ -1388,18 +1365,44 @@
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        /* --- BACKGROUND STARS, SHOOTING STARS & FIREFLIES --- */
+        /* --- BACKGROUND STARS (1 STATIC CANVAS + 10 TWINKLES), SHOOTING STARS & 6 FIREFLIES --- */
+        const skyCanvas = document.getElementById('skyCanvas');
+        const skyCtx = skyCanvas.getContext('2d');
+        const staticStars = Array.from({ length: 140 }, () => ({
+            rx: Math.random(),
+            ry: Math.random(),
+            r: Math.random() * 1.3 + 0.5,
+            a: Math.random() * 0.65 + 0.25,
+            warm: Math.random() > 0.78
+        }));
+
+        function drawSkyStars() {
+            const w = skyCanvas.clientWidth || window.innerWidth;
+            const h = skyCanvas.clientHeight || Math.floor(window.innerHeight * 0.58);
+            skyCanvas.width = w;
+            skyCanvas.height = h;
+            skyCtx.clearRect(0, 0, w, h);
+            for (let i = 0; i < staticStars.length; i++) {
+                const st = staticStars[i];
+                skyCtx.fillStyle = st.warm ? `rgba(255,230,179,${st.a})` : `rgba(255,255,255,${st.a})`;
+                skyCtx.beginPath();
+                skyCtx.arc(st.rx * w, st.ry * h, st.r, 0, Math.PI * 2);
+                skyCtx.fill();
+            }
+        }
+        drawSkyStars();
+
         const starsContainer = document.getElementById('stars-container');
-        for (let i = 0; i < 160; i++) {
+        for (let i = 0; i < 10; i++) {
             const star = document.createElement('div');
-            star.className = Math.random() > 0.78 ? 'star warm' : 'star';
-            star.style.left = Math.random() * 100 + 'vw';
-            star.style.top = Math.random() * 55 + 'vh';
-            const size = (Math.random() * 2.2 + 0.8).toFixed(2);
+            star.className = Math.random() > 0.6 ? 'star warm' : 'star';
+            star.style.left = (Math.random() * 98 + 1).toFixed(2) + 'vw';
+            star.style.top = (Math.random() * 52 + 2).toFixed(2) + 'vh';
+            const size = (Math.random() * 1.8 + 1.4).toFixed(1);
             star.style.width = size + 'px';
             star.style.height = size + 'px';
-            star.style.animationDuration = (Math.random() * 2.6 + 1.4).toFixed(2) + 's';
-            star.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+            star.style.animationDuration = (Math.random() * 2 + 1.8).toFixed(2) + 's';
+            star.style.animationDelay = (Math.random() * 2.5).toFixed(2) + 's';
             starsContainer.appendChild(star);
         }
 
@@ -1412,17 +1415,17 @@
             starsContainer.appendChild(s);
             setTimeout(() => s.remove(), 1250);
         }
-        setInterval(spawnShootingStar, 4800);
+        setInterval(spawnShootingStar, 5500);
 
         const firefliesContainer = document.getElementById('fireflies');
-        for (let i = 0; i < 18; i++) {
+        for (let i = 0; i < 6; i++) {
             const f = document.createElement('div');
             f.className = 'firefly';
-            f.style.left = (5 + Math.random() * 90) + 'vw';
-            f.style.top = (52 + Math.random() * 40) + 'vh';
-            f.style.setProperty('--dx', ((Math.random() - 0.5) * 80).toFixed(0) + 'px');
-            f.style.animationDuration = (5 + Math.random() * 6).toFixed(2) + 's';
-            f.style.animationDelay = (Math.random() * 5).toFixed(2) + 's';
+            f.style.left = (8 + Math.random() * 84).toFixed(1) + 'vw';
+            f.style.top = (54 + Math.random() * 36).toFixed(1) + 'vh';
+            f.style.setProperty('--dx', ((Math.random() - 0.5) * 70).toFixed(0) + 'px');
+            f.style.animationDuration = (6 + Math.random() * 5).toFixed(2) + 's';
+            f.style.animationDelay = (Math.random() * 4).toFixed(2) + 's';
             firefliesContainer.appendChild(f);
         }
 
@@ -1615,18 +1618,25 @@
             });
         }
 
-        function escapeHTML(str) {
-            return str
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-        }
+        let activeTypedNode = null;
+        let activeCursorNode = null;
 
-        function formatStoryHTML(textSlice, withCursor) {
-            const safe = escapeHTML(textSlice).replace(/\n/g, '<br>');
-            const extraClass = currentPage === pages.length - 1 ? ' finale-quote' : '';
-            const cursorHTML = withCursor ? '<span class="cursor"></span>' : '';
-            return '<div class="story-copy' + extraClass + '">' + safe + cursorHTML + '</div>';
+        function ensureStoryNodes() {
+            const textBox = document.getElementById('textBox');
+            if (!activeTypedNode || !textBox.contains(activeTypedNode)) {
+                textBox.innerHTML = '';
+                const copy = document.createElement('div');
+                copy.className = 'story-copy' + (currentPage === pages.length - 1 ? ' finale-quote' : '');
+                activeTypedNode = document.createElement('span');
+                activeCursorNode = document.createElement('span');
+                activeCursorNode.className = 'cursor';
+                copy.appendChild(activeTypedNode);
+                copy.appendChild(activeCursorNode);
+                textBox.appendChild(copy);
+            } else {
+                const copy = activeTypedNode.parentElement;
+                copy.className = 'story-copy' + (currentPage === pages.length - 1 ? ' finale-quote' : '');
+            }
         }
 
         function clearFinaleTimers() {
@@ -1753,8 +1763,11 @@
         function finishTypingImmediately() {
             clearTimeout(typingTimer);
             isTyping = false;
-            const textBox = document.getElementById('textBox');
-            textBox.innerHTML = formatStoryHTML(pages[currentPage], currentPage !== pages.length - 1);
+            ensureStoryNodes();
+            activeTypedNode.textContent = pages[currentPage];
+            if (activeCursorNode) {
+                activeCursorNode.style.display = currentPage === pages.length - 1 ? 'none' : 'inline-block';
+            }
             if (currentPage === pages.length - 1 && !finaleTriggered) {
                 showCake();
             }
@@ -1764,10 +1777,11 @@
             const glyphs = pageGlyphs[currentPage];
             if (charIndex < glyphs.length) {
                 isTyping = true;
-                const partial = glyphs.slice(0, charIndex + 1).join('');
-                document.getElementById('textBox').innerHTML = formatStoryHTML(partial, true);
+                ensureStoryNodes();
+                if (activeCursorNode) activeCursorNode.style.display = 'inline-block';
+                activeTypedNode.textContent = glyphs.slice(0, charIndex + 1).join('');
                 charIndex++;
-                const speed = (currentPage === pages.length - 1) ? 70 : 34;
+                const speed = (currentPage === pages.length - 1) ? 60 : 32;
                 typingTimer = setTimeout(typeWriter, speed);
             } else {
                 finishTypingImmediately();
@@ -1781,6 +1795,7 @@
             currentPage = targetIndex;
             charIndex = 0;
             isTyping = false;
+            activeTypedNode = null;
             document.getElementById('textBox').innerHTML = '';
             updateButtons();
             typeWriter();
@@ -1877,83 +1892,92 @@
             }
         }, { passive: true });
 
-        /* --- STARBURST FIREWORKS CANVAS --- */
+        /* --- FAST STARBURST FIREWORKS CANVAS (DPR=1, CLEARRECT, ON-DEMAND RAF) --- */
         const canvas = document.getElementById('fwCanvas');
         const ctx = canvas.getContext('2d');
         let cw = 0;
         let ch = 0;
+        let rafId = null;
 
         function resizeCanvas() {
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
             cw = window.innerWidth;
             ch = window.innerHeight;
-            canvas.width = Math.floor(cw * dpr);
-            canvas.height = Math.floor(ch * dpr);
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            canvas.width = cw;
+            canvas.height = ch;
         }
         resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                resizeCanvas();
+                drawSkyStars();
+            }, 120);
+        });
 
         const particles = [];
-        const gravity = 0.045;
+        const gravity = 0.05;
         const colors = ['#ff4d79', '#ffd166', '#64dfdf', '#c77dff', '#72efdd', '#ff9e64', '#ffffff'];
 
         class Particle {
             constructor(x, y, color, velocity, isRocket) {
                 this.x = x;
                 this.y = y;
-                this.prevX = x;
-                this.prevY = y;
+                this.tx1 = x;
+                this.ty1 = y;
+                this.tx2 = x;
+                this.ty2 = y;
                 this.color = color;
                 this.velocity = velocity;
                 this.isRocket = isRocket;
-                this.life = isRocket ? 100 : (65 + Math.random() * 45);
+                this.life = isRocket ? 100 : (48 + Math.random() * 28);
                 this.maxLife = this.life;
                 this.alpha = 1;
             }
 
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, this.alpha);
-                ctx.strokeStyle = this.color;
-                ctx.lineWidth = this.isRocket ? 2.4 : 2;
-                ctx.lineCap = 'round';
-                ctx.beginPath();
-                ctx.moveTo(this.prevX, this.prevY);
-                ctx.lineTo(this.x, this.y);
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.isRocket ? 2.2 : 1.7, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-                ctx.restore();
-            }
-
-            update() {
-                this.prevX = this.x;
-                this.prevY = this.y;
+            updateAndDraw() {
+                this.tx2 = this.tx1;
+                this.ty2 = this.ty1;
+                this.tx1 = this.x;
+                this.ty1 = this.y;
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
                 this.velocity.y += gravity;
 
                 if (!this.isRocket) {
-                    this.velocity.x *= 0.955;
-                    this.velocity.y *= 0.955;
-                    this.life -= 1.45;
-                    this.alpha = this.life / this.maxLife;
+                    this.velocity.x *= 0.945;
+                    this.velocity.y *= 0.945;
+                    this.life -= 1.65;
+                    this.alpha = this.life > 0 ? this.life / this.maxLife : 0;
                 }
-                this.draw();
+
+                if (this.alpha <= 0.02) return;
+                ctx.globalAlpha = this.alpha;
+                ctx.strokeStyle = this.color;
+                ctx.fillStyle = this.color;
+                ctx.lineWidth = this.isRocket ? 2.2 : 1.6;
+                ctx.beginPath();
+                ctx.moveTo(this.tx2, this.ty2);
+                ctx.lineTo(this.x, this.y);
+                ctx.stroke();
+                ctx.fillRect(this.x - 1.2, this.y - 1.2, 2.5, 2.5);
+            }
+        }
+
+        function ensureAnimating() {
+            if (!rafId && !document.hidden && particles.length > 0) {
+                rafId = requestAnimationFrame(animate);
             }
         }
 
         function createExplosion(x, y, baseColor) {
             playExplosionSound();
-            const count = 34;
+            const count = 20;
             const ringColor = Math.random() > 0.45 ? baseColor : colors[Math.floor(Math.random() * colors.length)];
             for (let i = 0; i < count; i++) {
-                const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.18;
-                const speed = Math.random() * 4.4 + 1.4;
+                const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.2;
+                const speed = Math.random() * 4.2 + 1.4;
                 const c = i % 3 === 0 ? ringColor : colors[Math.floor(Math.random() * colors.length)];
                 particles.push(new Particle(x, y, c, {
                     x: Math.cos(angle) * speed,
@@ -1973,6 +1997,7 @@
                 x: (Math.random() - 0.5) * 2.2,
                 y: -(Math.random() * 3.8 + 7.2)
             }, true));
+            ensureAnimating();
         }
 
         function launchFinale() {
@@ -1982,26 +2007,25 @@
                 if (document.hidden) return;
                 launchRandomFirework();
                 count++;
-                if (count >= 18) {
+                if (count >= 10) {
                     clearInterval(finaleInterval);
                     finaleInterval = null;
                 }
-            }, 220);
+            }, 250);
         }
 
         function animate() {
-            requestAnimationFrame(animate);
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
-            ctx.fillRect(0, 0, cw, ch);
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.globalAlpha = 1;
+            ctx.clearRect(0, 0, cw, ch);
             ctx.globalCompositeOperation = 'lighter';
 
-            if (particles.length > 420) {
-                particles.splice(0, particles.length - 420);
+            if (particles.length > 180) {
+                particles.splice(0, particles.length - 180);
             }
             for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
-                p.update();
+                p.updateAndDraw();
                 if (p.isRocket && p.velocity.y >= 0) {
                     createExplosion(p.x, p.y, p.color);
                     particles.splice(i, 1);
@@ -2009,10 +2033,21 @@
                     particles.splice(i, 1);
                 }
             }
+
+            if (particles.length > 0 && !document.hidden) {
+                rafId = requestAnimationFrame(animate);
+            } else {
+                rafId = null;
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.globalAlpha = 1;
+                ctx.clearRect(0, 0, cw, ch);
+            }
         }
 
-        setInterval(launchRandomFirework, 1700);
-        animate();
+        setInterval(launchRandomFirework, 2400);
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) ensureAnimating();
+        });
 
         window.addEventListener('pointerdown', (e) => {
             if (
@@ -2033,6 +2068,7 @@
             const vx = (targetX - startX) / t;
             const c = colors[Math.floor(Math.random() * colors.length)];
             particles.push(new Particle(startX, startY, c, { x: vx, y: vy }, true));
+            ensureAnimating();
         });
     </script>
 </body>
